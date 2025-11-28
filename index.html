@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Classes - Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 12px;
+            overflow-x: hidden;
+        }
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    padding: 16px 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 0.90em;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+        }
+
+        .search-box {
+            margin-bottom: 16px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+.clone-container {
+    margin-bottom: 20px;
+    margin-top: 20px;  /* Add this */
+    display: none;
+    animation: slideDown 0.4s ease-out;
+}
+
+        .clone-container.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+       @keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6),
+                    0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    50% {
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.8),
+                    0 0 0 15px rgba(245, 158, 11, 0);
+    }
+}
+        .clone-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            border-radius: 14px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: pulse 2s infinite;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .clone-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+        @keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.clone-card {
+    animation: pulse 2s infinite, bounce 1.5s ease-in-out infinite;
+}
+        .clone-card {
+    position: relative;
+    border: none;
+}
+
+.clone-card::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 14px;
+    padding: 3px;
+    background: linear-gradient(45deg, #f59e0b, #eab308, #f59e0b, #eab308);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 3s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotateBorder {
+    to { transform: rotate(360deg); }
+}
+
+        .clone-card:active {
+            transform: scale(0.98);
+        }
+
+.clone-card .click-feedback {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+.clone-card .click-feedback::before {
+  content: '';
+  width: 120px;
+  height: 120px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.clone-card .click-feedback::after {
+  content: '';
+  width: 30px;
+  height: 60px;
+  border: solid #10b981; /* Green checkmark */
+  border-width: 0 8px 8px 0;
+  transform: rotate(45deg);
+  display: block;
+  z-index: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.clone-card.clicked .click-feedback {
+  opacity: 1;
+  transform: scale(1);
+}
+
+        .clone-instruction {
+            font-size: 0.75em;
+            margin-bottom: 8px;
+            font-weight: 600;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .clone-number {
+            font-size: 0.95em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            opacity: 0.95;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .clone-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .clone-prompt {
+            font-size: 0.8em;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-top: 6px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .class-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 110px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .class-card:active {
+            transform: scale(0.96);
+        }
+
+        .class-card.locked {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            cursor: default;
+            box-shadow: 0 4px 12px rgba(156, 163, 175, 0.3);
+        }
+
+        .class-card.selected {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .class-number {
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            opacity: 0.95;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .class-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.25;
+            padding: 0 4px;
+        }
+
+        .lock-icon {
+            font-size: 1.3em;
+            margin-bottom: 4px;
+        }
+
+        .scheduled-message {
+            font-size: 0.6em;
+            margin-top: 6px;
+            opacity: 0.95;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .countdown {
+            font-size: 0.65em;
+            margin-top: 5px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 3px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+            font-size: 0.95em;
+            display: none;
+        }
+
+        .checkmark {
+            font-size: 1em;
+            margin-left: 6px;
+        }
+
+        /* Single column for very small screens */
+        @media (max-width: 360px) {
+            .class-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .class-card {
+                min-height: 100px;
+            }
+            
+            .class-title {
+                font-size: 1.05em;
+            }
+        }
+
+        /* Larger mobile screens */
+        @media (min-width: 400px) {
+            body {
+                padding: 14px;
+            }
+
+            .container {
+                padding: 18px 14px;
+                border-radius: 18px;
+            }
+
+            .class-card {
+                padding: 18px 14px;
+                min-height: 120px;
+                border-radius: 14px;
+            }
+
+            .class-number {
+                font-size: 0.72em;
+            }
+
+            .class-title {
+                font-size: 1.2em;
+            }
+
+            .clone-card {
+                padding: 24px 18px;
+            }
+
+            .clone-title {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Tablet portrait */
+        @media (min-width: 600px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                padding: 28px 22px;
+                max-width: 700px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 6px;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 20px;
+            }
+
+            .class-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .class-card {
+                padding: 22px 16px;
+                min-height: 140px;
+                border-radius: 16px;
+            }
+
+            .class-number {
+                font-size: 0.75em;
+                margin-bottom: 8px;
+            }
+
+            .class-title {
+                font-size: 1.35em;
+            }
+
+            .scheduled-message {
+                font-size: 0.68em;
+                margin-top: 8px;
+            }
+
+            .countdown {
+                font-size: 0.72em;
+                padding: 4px 10px;
+                margin-top: 7px;
+            }
+
+            .clone-card {
+                padding: 28px 22px;
+            }
+
+            .clone-title {
+                font-size: 1.8em;
+            }
+        }
+
+        /* Tablet landscape and desktop */
+        @media (min-width: 900px) {
+            body {
+                padding: 40px;
+            }
+
+            .container {
+                max-width: 1000px;
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 2.3em;
+            }
+
+            .class-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 18px;
+            }
+
+            .class-card {
+                padding: 30px 20px;
+                min-height: 180px;
+            }
+
+            .class-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+            }
+
+            .class-number {
+                font-size: 0.9em;
+            }
+
+            .class-title {
+                font-size: 1.6em;
+            }
+
+            .clone-card {
+                padding: 32px 26px;
+            }
+
+            .clone-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 30px rgba(245, 158, 11, 0.7);
+            }
+
+            .clone-title {
+                font-size: 2em;
+            }
+        }
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 30px;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 16px;
+}
+
+.home-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.home-button:active {
+    transform: scale(0.95);
+}
+
+.home-icon {
+    font-size: 20px;
+}
+
+.button-container {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+                /* ===== IMPORTANT NOTICE STYLES ===== */
+.important-notice {
+    background: linear-gradient(135deg, #00264d 0%, #0059b3 100%);
+    color: white;
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.5;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    border-left: 5px solid #ff4757;
+    border-right: 5px solid #ff4757;
+    animation: noticeGlow 2s ease-in-out infinite;
+}
+
+.important-notice strong {
+    font-size: 15px;
+    text-decoration: none; /* remove underline */
+    color: #ffeb3b; /* bright yellow for contrast on deep blue */
+    display: block;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+@keyframes noticeGlow {
+    0%, 100% { 
+        box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4); 
+    }
+    50% { 
+        box-shadow: 0 3px 20px rgba(255, 107, 107, 0.8); 
+    }
+}
+
+@media (max-width: 480px) {
+    .important-notice {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .important-notice strong {
+        font-size: 14px;
+    }
+}
+/* ===== END IMPORTANT NOTICE STYLES ===== */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="clone-container" id="cloneContainer">
+            <a href="#" class="clone-card" id="cloneCard">
+                <div class="clone-instruction">👆 Click to Enter</div>
+                <div class="clone-number">Class 1</div>
+                <div class="clone-title">Introduction</div>
+                <div class="clone-prompt">Tap here to open classroom →</div>
+            </a>
+        </div>
+        
+       <h1>📚 Supplementary Material 📚<br>For BNS<br><br>🌹Developed by Odisha e-Guru🌹<br>
+(A Private Educational Initiative - <br> Offering Online Academic Support)</h1>
+        <p class="subtitle">Select a class to begin</p>
+
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="🔍 Search for a class..."
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="class-grid" id="classGrid"></div>
+
+        <div class="no-results" id="noResults">
+            No classes found matching your search.
+        </div>
+    </div>
+
+    <script>
+        const classNames = {
+            1: 'Odisha e-Guru',
+            2: 'Odisha e-Guru',
+            3: 'Odisha e-Guru',
+            4: 'Odisha e-Guru',
+            5: 'Odisha e-Guru',
+            6: 'Odisha e-Guru',
+            7: 'Odisha e-Guru',
+            8: 'Odisha e-Guru',
+            9: 'Odisha e-Guru',
+            10: 'Odisha e-Guru',
+            11: 'Odisha e-Guru',
+            12: 'Odisha e-Guru',
+            13: 'Odisha e-Guru',
+            14: 'Odisha e-Guru',
+            15: 'Odisha e-Guru',
+            16: 'Odisha e-Guru',
+            17: 'Odisha e-Guru',
+            18: 'Odisha e-Guru',
+            19: 'Odisha e-Guru',
+            20: 'Odisha e-Guru',
+            21: 'Odisha e-Guru',
+            22: 'Odisha e-Guru',
+            23: 'Odisha e-Guru',
+            24: 'Odisha e-Guru',
+            25: 'Odisha e-Guru',
+            26: 'Odisha e-Guru',
+            27: 'Odisha e-Guru',
+            28: 'Odisha e-Guru',
+            29: 'Odisha e-Guru',
+            30: 'Odisha e-Guru'
+        };
+
+        const classSchedule = {
+            1: { available: false, releaseDate: '2025-11-01 00:00' },
+            2: { available: false, releaseDate: '2025-12-01 00:00' },
+            3: { available: false, releaseDate: '2025-12-01 00:00' },
+            4: { available: false, releaseDate: '2025-12-01 00:00' },
+            5: { available: false, releaseDate: '2025-12-01 00:00' },
+            6: { available: false, releaseDate: '2025-12-01 00:00' },
+            7: { available: false, releaseDate: '2025-12-01 00:00' },
+            8: { available: false, releaseDate: '2025-12-01 00:00' },
+            9: { available: false, releaseDate: '2025-12-01 00:00' },
+            10: { available: false, releaseDate: '2025-12-01 00:00' },
+            11: { available: false, releaseDate: '2025-12-01 00:00' },
+            12: { available: false, releaseDate: '2025-12-01 00:00' },
+            13: { available: false, releaseDate: '2025-12-01 00:00' },
+            14: { available: false, releaseDate: '2025-12-01 00:00' },
+            15: { available: false, releaseDate: '2025-12-01 00:00' },
+            16: { available: false, releaseDate: '2025-12-01 00:00' },
+            17: { available: false, releaseDate: '2025-12-01 00:00' },
+            18: { available: false, releaseDate: '2025-12-01 00:00' },
+            19: { available: false, releaseDate: '2025-12-01 00:00' },
+            20: { available: false, releaseDate: '2025-12-01 00:00' },
+            21: { available: false, releaseDate: '2025-12-01 00:00' },
+            22: { available: false, releaseDate: '2025-12-01 00:00' },
+            23: { available: false, releaseDate: '2025-12-01 00:00' },
+            24: { available: false, releaseDate: '2025-12-01 00:00' },
+            25: { available: false, releaseDate: '2025-12-01 00:00' },
+            26: { available: false, releaseDate: '2025-12-01 00:00' },
+            27: { available: false, releaseDate: '2025-12-01 00:00' },
+            28: { available: false, releaseDate: '2025-12-01 00:00' },
+            29: { available: false, releaseDate: '2025-12-01 00:00' },
+            30: { available: false, releaseDate: '2025-12-01 00:00' }
+        };
+
+        let selectedClass = null;
+
+        function parseDate(dateStr) {
+            return new Date(dateStr.replace(' ', 'T'));
+        }
+
+        function getTimeRemaining(releaseDate) {
+            const now = new Date();
+            const release = parseDate(releaseDate);
+            const diff = release - now;
+
+            if (diff <= 0) return null;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) {
+                return `${days}d ${hours}h`;
+            } else if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else {
+                return `${minutes}m`;
+            }
+        }
+
+        function formatReleaseDate(dateStr) {
+            const date = parseDate(dateStr);
+            const options = { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            };
+            return date.toLocaleString('en-US', options);
+        }
+
+        function isClassAvailable(classNum) {
+            const schedule = classSchedule[classNum];
+            if (!schedule) return true;
+            
+            if (schedule.available) return true;
+            
+            if (schedule.releaseDate) {
+                const now = new Date();
+                const release = parseDate(schedule.releaseDate);
+                return now >= release;
+            }
+            
+            return false;
+        }
+
+        function showCloneCard(classNum, className) {
+            selectedClass = classNum;
+            const cloneContainer = document.getElementById('cloneContainer');
+            const cloneCard = document.getElementById('cloneCard');
+
+            cloneCard.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (!this.querySelector('.click-feedback')) {
+    const feedback = document.createElement('div');
+    feedback.className = 'click-feedback';
+    feedback.textContent = '✅';
+    this.appendChild(feedback);
+  }
+  this.classList.add('clicked');
+  setTimeout(() => {
+    this.classList.remove('clicked');
+    window.location.href = this.href;
+  }, 500);
+});
+
+            cloneCard.innerHTML = `
+                <div class="clone-instruction">👆 Click to Enter</div>
+                <div class="clone-number">Class ${classNum}</div>
+                <div class="clone-title">${className}</div>
+                <div class="clone-prompt">Tap here to open classroom →</div>
+            `;
+            
+            cloneCard.href = `/class-${classNum}/`;
+            cloneContainer.classList.add('active');
+            
+            // Scroll to the clone card (now at the top)
+          cloneContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Update selected state in grid
+            const cards = document.getElementsByClassName('class-card');
+            for (let card of cards) {
+                card.classList.remove('selected');
+            }
+            const selectedCard = document.querySelector(`[data-class="${classNum}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+        }
+
+        function createClassCard(classNum) {
+            const card = document.createElement('div');
+            const schedule = classSchedule[classNum];
+            const available = isClassAvailable(classNum);
+
+            card.className = 'class-card';
+            card.setAttribute('data-class', classNum);
+            card.setAttribute('data-name', classNames[classNum] || `Class ${classNum}`);
+
+            if (available) {
+                card.style.cursor = 'pointer';
+                card.onclick = () => {
+                    showCloneCard(classNum, classNames[classNum]);
+                };
+                
+                const isSelected = selectedClass === classNum;
+                if (isSelected) {
+                    card.classList.add('selected');
+                }
+                
+                card.innerHTML = `
+                    <div class="class-number">Class ${classNum}</div>
+                    <div class="class-title">${classNames[classNum] || classNum}${isSelected ? '<span class="checkmark">✓</span>' : ''}</div>
+                `;
+            } else {
+                card.classList.add('locked');
+                card.onclick = (e) => e.preventDefault();
+                
+                const countdown = getTimeRemaining(schedule.releaseDate);
+                const releaseFormatted = formatReleaseDate(schedule.releaseDate);
+                
+                card.innerHTML = `
+                    <div class="lock-icon">🔒</div>
+                    <div class="class-number">Class ${classNum}</div>
+                    <div class="class-title">${classNames[classNum] || classNum}</div>
+                    <div class="scheduled-message">
+                        Available on<br>${releaseFormatted}
+                    </div>
+                    ${countdown ? `<div class="countdown">⏱️ ${countdown}</div>` : ''}
+                `;
+            }
+
+            return card;
+        }
+
+        function renderClasses() {
+            const grid = document.getElementById('classGrid');
+            grid.innerHTML = '';
+
+            for (let i = 1; i <= 30; i++) {
+                grid.appendChild(createClassCard(i));
+            }
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterClasses);
+
+        function filterClasses() {
+            const filter = searchInput.value.toLowerCase();
+            const cards = document.getElementsByClassName('class-card');
+            const noResults = document.getElementById('noResults');
+            let hasResults = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                const classNum = cards[i].getAttribute('data-class');
+                const className = cards[i].getAttribute('data-name').toLowerCase();
+                
+                if (className.indexOf(filter) > -1 || classNum.indexOf(filter) > -1) {
+                    cards[i].style.display = 'flex';
+                    hasResults = true;
+                } else {
+                    cards[i].style.display = 'none';
+                }
+            }
+
+            noResults.style.display = hasResults ? 'none' : 'block';
+        }
+
+        renderClasses();
+
+        setInterval(() => {
+            renderClasses();
+            filterClasses();
+        }, 60000);
+   </script>
+    
+</body>
+</html>
