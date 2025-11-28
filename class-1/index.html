@@ -1,0 +1,3651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+
+/* ===== BACK BUTTON STYLES - ADD THIS SECTION ===== */
+.back-button-container {
+    position: sticky;
+    top: 40px;
+    z-index: 9999;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 8px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: white;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    transform: translateX(-3px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.back-button:active {
+    transform: translateX(-1px);
+}
+
+.back-arrow {
+    font-size: 16px;
+}
+
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: white;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.home-button:hover {
+    transform: translateX(3px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.home-button:active {
+    transform: translateX(1px);
+}
+
+.home-icon {
+    font-size: 16px;
+}
+/* ===== END BACK BUTTON STYLES ===== */
+
+        
+       .content-section {
+     height: calc(100vh - 40px);  /* Subtract marquee height */
+    overflow-y: scroll;  /* Changed from 'auto' to 'scroll' to force scrollbar */
+    padding: 12px;
+    padding-right: 12px;  /* Ensure content doesn't overlap scrollbar */
+    background: linear-gradient(to bottom, #ffecd2 0%, #fcb69f 100%);
+}
+
+/* Force scrollbar to always be visible */
+.content-section::-webkit-scrollbar {
+    width: 12px;
+}
+
+.content-section::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.content-section::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+}
+
+.content-section::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .sentence-text {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            text-align: justify;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .test-btn {
+            padding: 10px 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+.test-btn.mcq { 
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); 
+}
+.test-btn.tf { 
+    background: linear-gradient(135deg, #0575e6 0%, #021b79 100%); 
+}
+.test-btn.fib { 
+    background: linear-gradient(135deg, #134e5e 0%, #71b280 100%); 
+}
+.test-btn.matching { 
+    background: linear-gradient(135deg, #c33764 0%, #1d2671 100%); 
+}
+.test-btn.arrange { 
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 100%); 
+}
+.test-btn.summary { 
+    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); 
+}
+        .test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .test-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+.web-link-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.web-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.web-link-btn:active {
+    transform: scale(0.98);
+}
+
+        .test-section {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .test-section.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .test-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .option {
+            background: white;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+
+        .option:active {
+            transform: scale(0.98);
+        }
+
+        .option.selected {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #4CAF50;
+        }
+
+        .option.wrong {
+            background: #ffcdd2;
+            border-color: #f44336;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+     .nav-btn.prev {
+    background: linear-gradient(135deg, #0047AB 0%, #003380 100%);
+}
+
+.nav-btn.next {
+    background: linear-gradient(135deg, #0047AB 0%, #003380 100%);
+}
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .match-item {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .match-item.selected {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .match-item.correct {
+            background: #c8e6c9;
+            border-color: #4CAF50;
+        }
+
+        .match-item.wrong {
+            background: #ffcdd2;
+            border-color: #f44336;
+        }
+
+        .arrange-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .word-chip {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+
+        .word-chip:active {
+            transform: scale(0.95);
+        }
+
+        .word-chip.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .feedback {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .feedback.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .feedback.wrong {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .arranged-answer {
+            display: block;
+            margin-top: 8px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 13px;
+        }
+
+        .summary-content {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .summary-content h2 {
+            color: #667eea;
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .summary-content h3 {
+            color: #f5576c;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .summary-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .summary-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .summary-content li {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .summary-content li strong {
+            color: #667eea;
+        }
+.login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 10000;
+    padding-top: 50px;
+    padding-left: 0;      /* Add this */
+    padding-right: 0;     /* Add this */
+}
+.login-container {
+    background: white;
+    padding: 30px 20px;  /* Reduced padding for mobile */
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 100%;     /* Changed from 400px to 100% */
+    width: 95%;          /* Changed from 90% to 95% */
+    margin: 0 auto;      /* Center the container */
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #667eea;
+    margin-bottom: 30px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.consent-box {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-size: 13px;
+    gap: 10px;
+}
+
+.consent-box input[type="checkbox"] {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 3px solid #667eea;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-top: 2px;
+}
+
+.consent-box input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.consent-box input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.consent-box input[type="checkbox"]:hover {
+    border-color: #764ba2;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+}
+
+.consent-box label {
+    line-height: 1.5;
+    color: #333;
+    cursor: pointer;
+text-align: justify;
+}
+
+.consent-box label a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 2px solid #667eea;
+    transition: all 0.2s;
+}
+
+.consent-box label a:hover {
+    border-bottom-color: #764ba2;
+    color: #764ba2;
+}
+
+.toggle-class-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #0047AB 0%, #003380 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.toggle-class-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.toggle-class-btn:active {
+    transform: scale(0.98);
+}
+
+.class-info-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-option-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.listen-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.see-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.info-option-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+}
+
+.info-option-btn:active {
+    transform: scale(0.98);
+}
+
+.audio-player {
+    margin-top: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease;
+}
+
+.stop-audio-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stop-audio-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.class-content-box {
+    margin-top: 15px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease;
+    text-align: left;
+}
+
+.class-content-box h3 {
+    color: #667eea;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.class-content-box p {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.class-content-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.class-content-box li {
+    color: #333;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.login-error {
+    color: #f44336;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.container {
+    display: none;
+}
+
+.container.authenticated {
+    display: block;
+}
+/* Make the marquee container not add to height */
+body > div:first-child {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    margin: 0;
+}
+
+/* Adjust main content to account for fixed marquee */
+.welcome-page {
+    padding-top: 40px; /* Adjust based on marquee height */
+}
+
+.container {
+    padding-top: 40px; /* Adjust based on marquee height */
+}
+.mermaid-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #0047AB 0%, #003380 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.mermaid-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.mermaid-btn:active {
+    transform: scale(0.98);
+}
+
+.mermaid-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    display: none;
+    overflow-x: auto;
+}
+
+.mermaid-container.active {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.mermaid-container h3 {
+    color: #FF6B6B;
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.summary-toggle-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.summary-toggle-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.summary-toggle-btn.active {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.show-summary-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.show-question-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.summary-question-content {
+    display: none;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.summary-question-content.active {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.summary-question-content h3 {
+    color: #f5576c;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.summary-question-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    text-align: justify;
+    margin-bottom: 12px;
+}
+
+.summary-question-content ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.summary-question-content li {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 8px;
+    text-align: justify;
+}
+/* Audio Control Button Styles */
+.audio-control-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.audio-control-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.audio-control-btn:active {
+    transform: scale(0.95);
+}
+
+.audio-control-btn.playing {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 2px 15px rgba(245, 87, 108, 0.6); }
+}
+
+.audio-control-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Container for question text with audio button */
+.question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.question-header .question-text {
+    flex: 1;
+    margin-bottom: 0;
+}
+/* Better spacing for STQ questions with audio */
+.question-header h3 {
+    margin: 0;
+    flex: 1;
+}
+
+/* Ensure audio buttons don't break layout in narrow spaces */
+@media (max-width: 480px) {
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .audio-control-btn {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+}
+@media (max-width: 480px) {
+    .login-container {
+        width: 98%;
+        padding: 25px 15px;
+        border-radius: 15px;
+    }
+    
+    .login-container h2 {
+        font-size: 20px;
+    }
+    
+    .login-input {
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .consent-box {
+        font-size: 12px;
+    }
+}
+/* AI Assistant Container Styles */
+.assistant-container {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    margin-bottom: 12px;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
+    border: 3px solid;
+    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+}
+
+.assistant-container.active {
+    display: block;
+}
+
+.assistant-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assistant-header h3 {
+    margin: 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.assistant-close-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.assistant-close-btn:hover {
+    transform: rotate(90deg);
+    background: #f5576c;
+    color: white;
+}
+
+.assistant-iframe-wrapper {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 20%);
+}
+
+.assistant-iframe-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.assistant-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #667eea;
+}
+
+.assistant-loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.assistant-info {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    border-top: 2px solid #667eea;
+}
+
+@media (max-width: 480px) {
+    .assistant-iframe-wrapper {
+        height: 500px;
+    }
+}
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+</script>
+</head>
+<body>
+<div style="background: #ff9800; padding: 8px; color: white; font-weight: bold; position: fixed; top: 0; left: 0; right: 0; z-index: 99999; overflow: hidden; margin: 0;">
+    <marquee behavior="scroll" direction="left" style="margin: 0;">
+        © 2025 • This is the property of Odisha e-Guru,Mayurbhanj,Odisha • For Educational Use Only • Copying & Distribution Prohibited • All Rights Reserved
+    </marquee>
+</div>
+
+    
+<div id="loginScreen" class="login-screen">
+    <div class="login-container">
+        <h1 class="welcome-title" style="text-align: center;">ଓଡିଶା ଇ-ଗୁରୁ ଦ୍ଵାରା ପ୍ରସ୍ତୁତ</h1>
+       <p class="welcome-subtitle" style="text-align: center;"><b>🌹ଏହି ସ୍ଵତନ୍ତ୍ର ମଞ୍ଚରେ ଆପଣଙ୍କୁ ସ୍ଵାଗତ🌹</b></p>  
+        
+        <input type="text" id="rollNumberInput" placeholder="ଦୟାକରି ଏଠାରେ ଆପଣଙ୍କ ରୋଲ୍ ନମ୍ବର ଲେଖନ୍ତୁ..." class="login-input">
+        
+        <div class="consent-box">
+            <input type="checkbox" id="consentCheck">
+            <label for="consentCheck">I agree to device tracking, usage monitoring, audio playback, internet access, data storage, and all <a href="https://sites.google.com/view/eguruodishastp/terms-and-conditions" target="_blank">terms & conditions</a> of Odisha e-Guru.</label>
+        </div>
+       <button id="loginBtn" class="login-btn">ଉପରୋକ୍ତ ଛୋଟ ବାକ୍ସରେ କ୍ଲିକ୍ କରିସାରିବା ପରେ ଏଠାରେ କ୍ଲିକ୍ କରି କ୍ଲାସ୍-ରୁମ୍ ରେ ପ୍ରବେଶ କରନ୍ତୁ ।</button>
+        <div id="loginError" class="login-error"></div>
+
+            <!-- Know Your Roll Number Button -->
+        <button onclick="window.open('https://llb-registration.pages.dev/bns/', '_blank')" class="roll-number-btn" style="background-color: #FF6B6B; margin-top: 10px; padding: 12px; font-size: 14px; border: none; border-radius: 8px; color: white; cursor: pointer; width: 100%; font-weight: bold;">
+            📋 ଆପଣଙ୍କ ରୋଲ୍ ନମ୍ବର ଜାଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ । 
+        </button>  
+        
+        <!-- What's in the Class Section -->
+        <div style="margin-top: 20px;">
+            <button id="toggleClassInfo" class="toggle-class-btn">📚 ଏହି କ୍ଲାସ୍ ରେ କ'ଣ ଅଛି ? <br>ଜାଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ । </button>
+            
+            <div id="classInfoOptions" class="class-info-options" style="display: none;">
+                <button id="listenBtn" class="info-option-btn listen-btn">🎧 ଶୁଣନ୍ତୁ..</button>
+                <button id="seeBtn" class="info-option-btn see-btn">👁️ ଦେଖନ୍ତୁ..</button>
+            </div>
+            
+            <div id="audioPlayer" class="audio-player" style="display: none;">
+                <audio id="classAudio" controls style="width: 100%; margin-top: 10px;">
+                    <source src="https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3" type="audio/mpeg">
+                    Your browser does not support audio playback.
+                </audio>
+                <button id="stopAudioBtn" class="stop-audio-btn">⏹️ Stop</button>
+            </div>
+            
+            <div id="classContent" class="class-content-box" style="display: none;">
+                <h3>📖 ବିଷୟବସ୍ତୁ : ପ୍ରଥମ ଅଧ୍ୟାୟର Unit-1</h3>
+                <p>ଏହି କ୍ଲାସ୍ ରେ ଆମେ ଶିଖିବା :</p>
+                <ul>
+                    <li>📝 Unit-1 ର ସାରକଥା(ଓଡିଆରେ)</li>
+                    <li>📝 Unit-1 ରେ ଥିବା ଇଂରାଜୀ ଶବ୍ଦଗୁଡିକର ଓଡିଆ ଅର୍ଥ/li>
+                    <li>📝 Unit-1 ର ସାରକଥା(ଇଂରାଜୀରେ)</li>
+                    <li>📝 Unit-1 ସମ୍ବନ୍ଧୀୟ ଅତି ସଂକ୍ଷିପ୍ତ ପ୍ରଶ୍ନୋତ୍ତର</li>
+                    <li>📝 Unit-1 ସମ୍ବନ୍ଧୀୟ ସଂକ୍ଷିପ୍ତ ପ୍ରଶ୍ନୋତ୍ତର</li>
+                    <li>📝 Unit-1 ସମ୍ବନ୍ଧୀୟ ଦୀର୍ଘ ପ୍ରଶ୍ନୋତ୍ତର</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Small Round Image Container -->
+        <div class="image-container" style="
+            margin-top: 20px;
+            text-align: center;
+        ">
+            <div style="
+                display: inline-block;
+                padding: 10px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 50%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            ">
+                <img src="https://github.com/eguruOdisha/BNSS/raw/main/bot%20image-1.gif" 
+                     alt="AI Assistant" 
+                     class="assistant-image"
+                     style="
+                        display: block;
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        object-fit: contain;
+                        background: white;
+                     ">
+            </div>
+            <p class="info-text" style="
+                margin-top: 15px;
+                font-size: 14px;
+                color: #000000;
+                font-weight: bold;
+            ">
+                📚 ଶିକ୍ଷାରେ ଡିଜିଟାଲ ଯୁଗର ଆରମ୍ଭ – ଆପଣଙ୍କ ସହିତ ।
+            </p>
+        </div>
+    </div>
+</div>
+    <div class="container">
+
+        <div class="content-section">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            
+            <div id="scoreDisplay" class="score-display" style="display: none;">
+                ଏହି ପୃଷ୍ଠା ଟି କୁ ପଢୁ ପଢୁ ଆପଣ କେତେ ମାର୍କ୍ ରଖିଲେ ଦେଖନ୍ତୁ : <span id="totalScore">0</span> / <span id="maxScore">0</span>
+            </div>
+
+                    <!-- Small Round Image Container -->
+        <div class="image-container" style="
+            margin-top: 20px;
+            text-align: center;
+        ">
+            <div style="
+                display: inline-block;
+                padding: 10px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 50%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            ">
+                <img src="https://github.com/eguruOdisha/BNSS/raw/main/bot%20image-1.gif" 
+                     alt="AI Assistant" 
+                     class="assistant-image"
+                     style="
+                        display: block;
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        object-fit: contain;
+                        background: white;
+                     ">
+            </div>
+            <p class="info-text" style="
+                margin-top: 15px;
+                font-size: 14px;
+                color: #000000;
+                font-weight: bold;
+            ">
+            </p>
+        </div>
+    
+<button id="toggleAssistantBtn" class="web-link-btn" style="border: none; cursor: pointer;">
+    🙋 ଆସନ୍ତୁ, ଏଠାରେ ଆସିଷ୍ଟାଣ୍ଟ କୁ ପାଠ ପଚାରିବା...
+</button>
+
+<div id="assistantContainer" class="assistant-container">
+    <div class="assistant-header">
+        <h3>🤖 ମୁଁ ଆପଣଙ୍କ ଆସିଷ୍ଟାଣ୍ଟ - ମୋତେ ପ୍ରଶ୍ନ ପଚାରନ୍ତୁ</h3>
+        <button class="assistant-close-btn" onclick="closeAssistant()">✕</button>
+    </div>
+    <div class="assistant-iframe-wrapper">
+        <div class="assistant-loading" id="assistantLoading">
+            <div class="assistant-loading-spinner"></div>
+            <p>ଦୟାକରି ଅପେକ୍ଷା କରନ୍ତୁ... ଆସିଷ୍ଟାଣ୍ଟ ଲୋଡ୍ ହେଉଛି...</p>
+        </div>
+        <iframe 
+            id="assistantIframe"
+            src="" 
+            allow="microphone; camera; clipboard-write"
+            style="display: none;">
+        </iframe>
+    </div>
+    <div class="assistant-info">
+        💡 ଏହି ଆସିଷ୍ଟାଣ୍ଟ ଆପଣଙ୍କ ପାଠ ସମ୍ବନ୍ଧୀୟ ସବୁ ପ୍ରଶ୍ନର ଉତ୍ତର ଦେବ | ଆରାମରେ ପଚାରନ୍ତୁ !
+    </div>
+</div>
+            
+            <div id="sentenceText" class="sentence-text"></div>
+ <button id="mermaidBtn" class="mermaid-btn">📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..</button>
+<div id="mermaidContainer" class="mermaid-container"></div>           
+            <div class="test-buttons">
+                <button id="mcqBtn" class="test-btn mcq">📝 ବିକଳ୍ପ ଉତ୍ତରଯୁକ୍ତ ପ୍ରଶ୍ନ</button>
+                <button id="tfBtn" class="test-btn tf" disabled>✓ ସତ୍ୟ/ମିଥ୍ୟା ଦର୍ଶାଇବା ପ୍ରଶ୍ନ</button>
+                <button id="fibBtn" class="test-btn fib" disabled>✏️ ଶୂନ୍ୟାସ୍ଥାନ ପୂରଣ କରିବା</button>
+                <button id="matchBtn" class="test-btn matching" disabled>🔗 ଶବ୍ଦ ମେଳ କରାଇବା</button>
+                <button id="arrangeBtn" class="test-btn arrange" disabled>🔤 ଶବ୍ଦକୁ ସଜାଇବା</button>
+                <button id="stqBtn" class="test-btn summary" disabled>📝 ଅତି ସଂକ୍ଷିପ୍ତ ପ୍ରଶ୍ନୋତ୍ତର</button>
+            </div>
+            
+            <div id="testContainer"></div>
+            
+            <div class="navigation">
+                <button id="prevBtn" class="nav-btn prev" disabled>⬅️ ପଛକୁ ଫେରିବା</button>
+                <button id="nextBtn" class="nav-btn next" disabled>ଆଗକୁ ଯିବା ➡️</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxjlMk-7ZvfXyj7FOVVx1Igs8pRTZOYv5Dswr_GOQy4tEr3yI7ElEEnhkXkw17rbsgoQ/exec';
+
+// CRITICAL: This must match CLASS_SHEET_NAME in your registration script
+const CLASS_NAME = "bns";  
+
+// Generate unique device ID based on browser fingerprint
+function getDeviceId() {
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        const nav = navigator;
+        const screen = window.screen;
+        const fingerprint = [
+            nav.userAgent,
+            nav.language,
+            screen.colorDepth,
+            screen.width + 'x' + screen.height,
+            new Date().getTimezoneOffset(),
+            !!window.sessionStorage,
+            !!window.localStorage
+        ].join('|');
+        
+        let hash = 0;
+        for (let i = 0; i < fingerprint.length; i++) {
+            const char = fingerprint.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        
+        deviceId = 'DEV_' + Math.abs(hash).toString(36);
+        localStorage.setItem('deviceId', deviceId);
+    }
+    return deviceId;
+}
+
+// Session tracking
+let sessionData = {
+    rollNumber: null,
+    deviceId: getDeviceId(),
+    className: CLASS_NAME,  // ADD THIS
+    loginTime: null,
+    logoutTime: null,
+    lastActivity: null
+};
+
+// Login handler
+document.getElementById('loginBtn').addEventListener('click', async function() {
+    const rollNumber = document.getElementById('rollNumberInput').value.trim();
+    const consent = document.getElementById('consentCheck').checked;
+    const errorDiv = document.getElementById('loginError');
+    
+    errorDiv.textContent = '';
+    
+    if (!rollNumber) {
+        errorDiv.textContent = 'ଦୟାକରି ରୋଲ୍ ନମ୍ବର ଲେଖନ୍ତୁ ।';
+        return;
+    }
+    
+    if (!consent) {
+        errorDiv.textContent = 'ଦୟାକରି ସର୍ତ୍ତାବଳୀରେ ସହମତି ଜଣାଇବା ପାଇଁ ଛୋଟ ଚେକ୍-ବାକ୍ସ ରେ କ୍ଲିକ୍ କରନ୍ତୁ ।';
+        return;
+    }
+    
+    this.disabled = true;
+    this.textContent = 'ଦୟାକରି ଅପେକ୍ଷା କରନ୍ତୁ... ଆପଣଙ୍କର ପରିଚୟପତ୍ର ଯାଞ୍ଚ କରାଯାଉଛି । ଏଥିରେ କିଛି ସମୟ ଲାଗିପାରେ (ପ୍ରାୟ 10 ସେକେଣ୍ଡ) ।';
+    
+    try {
+        // CRITICAL FIX: Add className parameter
+        const verifyResponse = await fetch(
+            `${GOOGLE_SCRIPT_URL}?action=verify&rollNumber=${rollNumber}&deviceId=${sessionData.deviceId}&className=${CLASS_NAME}`
+        );
+        const result = await verifyResponse.json();
+        
+        if (!result.success) {
+            errorDiv.textContent = result.message || 'ଲଗଇନ୍ ବିଫଳ ହେଲା । ଦୟାକରି ଆମ ପ୍ରତିନିଧିଙ୍କ ସହିତ ଯୋଗାଯୋଗ କରନ୍ତୁ ।';
+            this.disabled = false;
+            this.textContent = 'Enter';
+            return;
+        }
+        
+        // CRITICAL FIX: Send className instead of classNumber
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'login',
+                rollNumber: rollNumber,
+                deviceId: sessionData.deviceId,
+                className: CLASS_NAME,  // Changed from classNumber: 2
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        if (result.success) {
+            sessionData.rollNumber = rollNumber;
+            sessionData.loginTime = new Date();
+            sessionData.lastActivity = new Date();
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            document.querySelector('.container').classList.add('authenticated');
+            initializeApp(); 
+            startActivityTracking();
+        } else {
+            errorDiv.textContent = result.message || 'ଲଗଇନ୍ ବିଫଳ ହେଲା । ଦୟାକରି ଆମ ପ୍ରତିନିଧିଙ୍କ ସହିତ ଯୋଗାଯୋଗ କରନ୍ତୁ ।';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'କ୍ଷମା କରିବେ ଆଜ୍ଞା । କୌଣସି କାରଣ ବଶତଃ ସଂଯୋଗ ହୋଇପାରୁନାହିଁ । ଦୟାକରି ଆଉଥରେ ଚେଷ୍ଟା କରନ୍ତୁ । ଅଧିକ ଅସୁବିଧା ହେଲେ ଦୟାକରି ଆମ ପ୍ରତିନିଧିଙ୍କ ସହିତ ଯୋଗାଯୋଗ କରନ୍ତୁ ।';
+        console.error('Login error:', error);
+    }
+    
+    this.disabled = false;
+    this.textContent = 'Enter';
+});
+
+// Activity tracking
+function startActivityTracking() {
+    ['click', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+        document.addEventListener(event, () => {
+            sessionData.lastActivity = new Date();
+        });
+    });
+    
+    setInterval(sendHeartbeat, 120000);
+    window.addEventListener('beforeunload', handleLogout);
+}
+
+async function sendHeartbeat() {
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'heartbeat',
+                rollNumber: sessionData.rollNumber,
+                deviceId: sessionData.deviceId,
+                className: CLASS_NAME,  // ADD THIS
+                timestamp: new Date().toISOString()
+            })
+        });
+    } catch (error) {
+        console.error('Heartbeat error:', error);
+    }
+}
+
+async function handleLogout() {
+    sessionData.logoutTime = new Date();
+    const duration = Math.floor((sessionData.logoutTime - sessionData.loginTime) / 1000);
+    
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            keepalive: true,
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'logout',
+                rollNumber: sessionData.rollNumber,
+                deviceId: sessionData.deviceId,
+                className: CLASS_NAME,  // ADD THIS
+                timestamp: new Date().toISOString(),
+                duration: duration
+            })
+        });
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+}
+
+const courseData = {
+            teacherImage: "https://via.placeholder.com/400x300/667eea/ffffff?text=Teacher",
+            sentences: [
+ {
+            text: "ଏହି unit ରେ ଲେଖକ କହୁଛନ୍ତି : <br>👉 ମୁଁ ମସ୍କୋରେ ଏକା ରହୁଥିଲି। ମୋ ବାପାମାଆଙ୍କ ଛାଡପତ୍ର ହୋଇଥିଲା । <br><br>👉ମୋ ବାପା କାଜାଖସ୍ତାନରେ ଥିଲେ । ତାଙ୍କର ଏକ ନୂତନ ସ୍ତ୍ରୀ ଏବଂ ଦୁଇଟି ପିଲା ଥିଲେ। ସେ ମୋତେ ଚିଠି ପଠାଉ ନଥିଲେ। <br><br>👉 ମୋ ମାଆ ଯୁଦ୍ଧ ସମ୍ମୁଖ ଭାଗରେ ଥିଲେ। ସେ ସୈନିକମାନଙ୍କ ପାଇଁ ଗୀତ ଗାଇଥିଲେ। <br><br>👉 ମୁଁ ରାସ୍ତାରେ ବଢ଼ିଥିଲି। ରାସ୍ତା ମୋତେ ଖରାପ ଅଭ୍ୟାସ ଶିଖାଇଲା। ରାସ୍ତା ମୋତେ ଲଢ଼ିବା ଶିଖାଇଲା। ରାସ୍ତା ମୋତେ କାହାକୁ ଭୟ ନ କରିବାକୁ ଶିଖାଇଲା । ମୁଁ ଶକ୍ତିଶାଳୀ ଲୋକଙ୍କୁ ନ ଡରିବା ଉଚିତ ବୋଲି ମୁଁ ରାସ୍ତାରେ ରହୁ ରହୁ ଶିଖିଗଲି ।",
+            audio: "https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3",
+            mermaid: `graph LR
+
+A[ଲେଖକ ମସ୍କୋରେ ଏକା ରହୁଥିଲେ] --> B[ପରିବାର ପରିସ୍ଥିତି]
+
+B --> B1[ବାପାମାଆଙ୍କ ଛାଡପତ୍ର]
+B --> B2[ବାପା କାଜାଖସ୍ତାନରେ]
+B --> B3[ବାପାଙ୍କ ନୂତନ ସ୍ତ୍ରୀ ଓ ଦୁଇ ପିଲା]
+B --> B4[ବାପା ଚିଠି ପଠାଉ ନଥିଲେ]
+B --> B5[ମାଆ ଯୁଦ୍ଧ ସମ୍ମୁଖ ଭାଗରେ]
+B --> B6[ମାଆ ସୈନିକଙ୍କ ପାଇଁ ଗୀତ ଗାଉଥିଲେ]
+
+A --> C[ଲେଖକଙ୍କ ପିଲାଦିନ: ରାସ୍ତା ଜୀବନ]
+
+C --> C1[ରାସ୍ତାରେ ବଢ଼ିଲି]
+C --> C2[ଖରାପ ଅଭ୍ୟାସ ଶିଖିଲି]
+C --> C3[ଲଢ଼ିବା ଶିଖିଲି]
+C --> C4[ଭୟ ନ କରିବାକୁ ଶିଖିଲି]
+C --> C5[ଶକ୍ତିଶାଳୀଙ୍କୁ ଭୟ ନ କରିବା ଶିଖିଲି]
+`,
+
+mcq: {
+    questions: [
+        {
+            question: "ଲେଖକ କେଉଁ ସହରରେ ଏକା ରହୁଥିଲେ?",
+            options: ["କାଜାଖସ୍ତାନ", "ମସ୍କୋ", "କିଭ", "ତାଶକେଣ୍ଟ"],
+            correct: 1
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପା କେଉଁଠି ରହୁଥିଲେ?",
+            options: ["ମସ୍କୋରେ", "କାଜାଖସ୍ତାନରେ", "ଜର୍ମାନୀରେ", "ଚିଠିରେ ଉଲ୍ଲେଖ ନାହିଁ"],
+            correct: 1
+        },
+        {
+            question: "ଲେଖକଙ୍କ ମାଆ କେଉଁ କାମ କରୁଥିଲେ?",
+            options: ["ଚାଷ କରୁଥିଲେ", "ଅଫିସରେ କାମ କରୁଥିଲେ", "ଯୁଦ୍ଧ ସମ୍ମୁଖରେ ସୈନିକଙ୍କ ପାଇଁ ଗୀତ ଗାଉଥିଲେ", "ଘରେ ଥିଲେ"],
+            correct: 2
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକଙ୍କୁ କଣ ଶିଖାଇଲା?",
+            options: ["ଚିଠି ଲେଖିବା", "ପଢିବା", "ଖରାପ ଅଭ୍ୟାସ, ଲଢ଼ିବା ଏବଂ ଭୟ ନ କରିବା", "ସଙ୍ଗୀତ ଶିଖିବା"],
+            correct: 2
+        },
+        {
+            question: "ଲେଖକ କାହାଠାରୁ ଶକ୍ତିଶାଳୀ ଲୋକଙ୍କୁ ଡରିବାକୁ ନ ଶିଖିଲେ?",
+            options: ["ତାଙ୍କ ଶିକ୍ଷକ", "ତାଙ୍କ ମାଆ", "ରାସ୍ତା", "ତାଙ୍କ ବାପା"],
+            correct: 2
+        }
+    ]
+},
+
+            trueFalse: {
+    questions: [
+        {
+            question: "ଲେଖକ ମସ୍କୋରେ ଏକା ରହୁଥିଲେ।",
+            correct: true
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପାମାଆଙ୍କ ଛାଡପତ୍ର ହୋଇନଥିଲା।",
+            correct: false
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପା କାଜାଖସ୍ତାନରେ ଥିଲେ।",
+            correct: true
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପା ନିୟମିତ ଭାବରେ ଚିଠି ପଠାଉଥିଲେ।",
+            correct: false
+        },
+        {
+            question: "ଲେଖକଙ୍କ ମାଆ ଯୁଦ୍ଧ ସମ୍ମୁଖ ଭାଗରେ ଥିଲେ।",
+            correct: true
+        },
+        {
+            question: "ଲେଖକଙ୍କ ମାଆ ସୈନିକମାନଙ୍କ ପାଇଁ ଗୀତ ଗାଉ ନଥିଲେ।",
+            correct: false
+        },
+        {
+            question: "ଲେଖକ ରାସ୍ତାରେ ବଢ଼ିଥିଲେ।",
+            correct: true
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକକୁ କେବଳ ଭଲ ଅଭ୍ୟାସ ଶିଖାଇଲା।",
+            correct: false
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକକୁ ଲଢ଼ିବା ଶିଖାଇଲା।",
+            correct: true
+        },
+        {
+            question: "ଲେଖକ ରାସ୍ତାରୁ ଶିଖିଲେ ଯେ ଶକ୍ତିଶାଳୀ ଲୋକଙ୍କୁ ଡରିବା ଉଚିତ।",
+            correct: false
+        }
+    ]
+},
+
+            fillBlanks: {
+    questions: [
+        {
+            question: "ଲେଖକ ___ ରେ ଏକା ରହୁଥିଲେ।",
+            answer: "ମସ୍କୋ"
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପାମାଆଙ୍କ ___ ହୋଇଥିଲା।",
+            answer: "ଛାଡପତ୍ର"
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପା ___ ରେ ଥିଲେ।",
+            answer: "କାଜାଖସ୍ତାନ"
+        },
+        {
+            question: "ତାଙ୍କର ଏକ ନୂତନ ସ୍ତ୍ରୀ ଏବଂ ___ ପିଲା ଥିଲେ।",
+            answer: "ଦୁଇଟି"
+        },
+        {
+            question: "ସେ ଲେଖକଙ୍କୁ ___ ପଠାଉ ନଥିଲେ।",
+            answer: "ଚିଠି"
+        },
+        {
+            question: "ଲେଖକଙ୍କ ମାଆ ___ ସମ୍ମୁଖ ଭାଗରେ ଥିଲେ।",
+            answer: "ଯୁଦ୍ଧ"
+        },
+        {
+            question: "ସେ ସୈନିକମାନଙ୍କ ପାଇଁ ___ ଗାଇଥିଲେ।",
+            answer: "ଗୀତ"
+        },
+        {
+            question: "ଲେଖକ ___ ରେ ବଢ଼ିଥିଲେ।",
+            answer: "ରାସ୍ତା"
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକଙ୍କୁ ___ ଅଭ୍ୟାସ ଶିଖାଇଲା।",
+            answer: "ଖରାପ"
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକଙ୍କୁ ___ ଶିଖାଇଲା।",
+            answer: "ଲଢ଼ିବା"
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକଙ୍କୁ କାହାକୁ ___ ନ କରିବାକୁ ଶିଖାଇଲା।",
+            answer: "ଭୟ"
+        },
+        {
+            question: "ଲେଖକ ___ ଲୋକଙ୍କୁ ନ ଡରିବା ଉଚିତ ବୋଲି ଶିଖିଗଲେ।",
+            answer: "ଶକ୍ତିଶାଳୀ"
+        }
+    ]
+},
+
+          matching: {
+    pairs: [
+        { left: "ମସ୍କୋ", right: "ଲେଖକ ଯେଉଁଠାରେ ଏକା ରହୁଥିଲେ" },
+        { left: "ବାପା", right: "କାଜାଖସ୍ତାନରେ ନୂତନ ପରିବାର ସହିତ ଥିଲେ" },
+        { left: "ମାଆ", right: "ଯୁଦ୍ଧ ସମ୍ମୁଖ ଭାଗରେ ସୈନିକଙ୍କ ପାଇଁ ଗୀତ ଗାଉଥିଲେ" },
+        { left: "ରାସ୍ତା", right: "ଖରାପ ଅଭ୍ୟାସ, ଲଢ଼ିବା ଓ ଭୟ ନ କରିବା ଶିଖାଇଲା" },
+        { left: "ଶକ୍ତିଶାଳୀ ଲୋକ", right: "ଯେଉଁମାନଙ୍କୁ ଡରିବା ଉଚିତ ନୁହେଁ ବୋଲି ଶିଖିଥିଲେ" }
+    ]
+},
+
+arrange: {
+    questions: [
+        {
+            words: ["ଲେଖକ", "ମସ୍କୋରେ", "ଏକା", "ରହୁଥିଲେ"],
+            correct: "ଲେଖକ ମସ୍କୋରେ ଏକା ରହୁଥିଲେ"
+        },
+        {
+            words: ["ଲେଖକଙ୍କ", "ବାପାମାଆଙ୍କ", "ଛାଡପତ୍ର", "ହୋଇଥିଲା"],
+            correct: "ଲେଖକଙ୍କ ବାପାମାଆଙ୍କ ଛାଡପତ୍ର ହୋଇଥିଲା"
+        },
+        {
+            words: ["ଲେଖକଙ୍କ", "ବାପା", "କାଜାଖସ୍ତାନରେ", "ଥିଲେ"],
+            correct: "ଲେଖକଙ୍କ ବାପା କାଜାଖସ୍ତାନରେ ଥିଲେ"
+        },
+        {
+            words: ["ତାଙ୍କର", "ନୂତନ", "ସ୍ତ୍ରୀ", "ଥିଲେ"],
+            correct: "ତାଙ୍କର ନୂତନ ସ୍ତ୍ରୀ ଥିଲେ"
+        },
+        {
+            words: ["ତାଙ୍କର", "ଦୁଇଟି", "ପିଲା", "ଥିଲେ"],
+            correct: "ତାଙ୍କର ଦୁଇଟି ପିଲା ଥିଲେ"
+        }
+    ]
+},
+
+          stq: {
+    questions: [
+        {
+            question: "ଲେଖକ କେଉଁ ସହରରେ ଏକା ରହୁଥିଲେ?",
+            answer: "ଲେଖକ ମସ୍କୋରେ ଏକା ରହୁଥିଲେ।"
+        },
+        {
+            question: "ଲେଖକଙ୍କ ବାପା କେଉଁ ଦେଶରେ ଥିଲେ?",
+            answer: "ଲେଖକଙ୍କ ବାପା କାଜାଖସ୍ତାନରେ ଥିଲେ।"
+        },
+        {
+            question: "ଲେଖକଙ୍କ ମାଆ କେଉଁଠି କାମ କରୁଥିଲେ?",
+            answer: "ଲେଖକଙ୍କ ମାଆ ଯୁଦ୍ଧ ସମ୍ମୁଖ ଭାଗରେ ସୈନିକମାନଙ୍କ ପାଇଁ ଗୀତ ଗାଉଥିଲେ।"
+        },
+        {
+            question: "ରାସ୍ତା ଲେଖକଙ୍କୁ କଣ ଶିଖାଇଲା?",
+            answer: "ରାସ୍ତା ଲେଖକଙ୍କୁ ଖରାପ ଅଭ୍ୟାସ, ଲଢ଼ିବା ଏବଂ କାହାକୁ ଭୟ ନ କରିବା ଶିଖାଇଲା।"
+        },
+        {
+            question: "ଲେଖକ ଶକ୍ତିଶାଳୀ ଲୋକଙ୍କୁ କାହିଁକି ଡରୁନଥିଲେ?",
+            answer: "କାରଣ ରାସ୍ତାରେ ରହି ରହି ଲେଖକ ଶିଖିଥିଲେ ଯେ ଶକ୍ତିଶାଳୀ ଲୋକଙ୍କୁ ଡରିବା ଉଚିତ ନୁହେଁ।"
+        }
+    ]
+}
+},
+
+           {
+                 text: `👉 Divorce ର ଅର୍ଥ ଛାଡପତ୍ର ହେବା । Divorced ର ଅର୍ଥ ଛାଡପତ୍ର ହୋଇସାରିଛି । ଲେଖକଙ୍କ ବାପା ଏବଂ ମାଆଙ୍କର ଛାଡପତ୍ର ହୋଇସାରିଛି । <br>
+👉 Kazakhstan ହେଉଛି ଏକ ଦେଶର ନାମ । ଏହା ରୁଷ ନିକଟରେ ଅବସ୍ଥିତ । ଲେଖକଙ୍କ ବାପା ଏଠାରେ ରହୁଥିଲେ । <br>
+👉 Seldom ର ଅର୍ଥ କଦାଚିତ୍ । Seldom ର ଅର୍ଥ ବହୁତ କମ୍ ସମୟରେ । ଲେଖକଙ୍କ ବାପା କଦାଚିତ୍ ଚିଠି ପଠାଉଥିଲେ । <br>
+👉 Front ର ଅର୍ଥ ଯୁଦ୍ଧ ସ୍ଥଳ । Front ଯେଉଁଠି ସୈନିକମାନେ ଲଢ଼ନ୍ତି । ଲେଖକଙ୍କ ମାଆ Front କୁ ଯାଇଥିଲେ । <br>
+👉 Geologist ର ଅର୍ଥ ଭୂବିଜ୍ଞାନୀ । Geologist ମାଟି ଏବଂ ପଥର ଅଧ୍ୟୟନ କରନ୍ତି । ଲେଖକଙ୍କ ମାଆ ପୂର୍ବରୁ Geologist ଥିଲେ । <br>
+👉 Concerts ର ଅର୍ଥ ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ । Concerts ରେ ଗାୟକ ଗୀତ ଗାନ୍ତି । ଲେଖକଙ୍କ ମାଆ Concerts ଦେଉଥିଲେ । <br>
+👉 Troops ର ଅର୍ଥ ସୈନିକ ଦଳ । Troops ଅନେକ ସୈନିକ ଏକାଠି । ଲେଖକଙ୍କ ମାଆ Troops ପାଇଁ ଗୀତ ଗାଉଥିଲେ । <br>
+👉 Education ର ଅର୍ଥ ଶିକ୍ଷା । Education ର ଅର୍ଥ କିଛି ଶିଖିବା । ଲେଖକଙ୍କ Education ରାସ୍ତାରେ ହୋଇଥିଲା । <br>
+👉 Swear ର ଅର୍ଥ ଗାଳି ଦେବା । Swear ର ଅର୍ଥ ଖରାପ ଶବ୍ଦ କହିବା । ରାସ୍ତା ଲେଖକଙ୍କୁ Swear ଶିଖାଇଥିଲା । <br>
+👉 Fists ର ଅର୍ଥ ମୁଠି । Fists ବନ୍ଦ ହାତ । ଲେଖକ Fists ପ୍ରସ୍ତୁତ ରଖୁଥିଲେ ।`,
+        
+        audio: "https://github.com/eguruOdisha/FRONT/raw/main/difficultwords.mp3",
+        
+        mermaid: `graph LR
+
+A[Difficult Words] --> B[Divorced]
+A --> C[Kazakhstan]
+A --> D[Seldom]
+A --> E[Front]
+A --> F[Geologist]
+A --> G[Concerts]
+A --> H[Troops]
+A --> I[Education]
+A --> J[Swear]
+A --> K[Fists]
+
+B --> B1[ଛାଡପତ୍ର]
+C --> C1[ଦେଶର ନାମ]
+D --> D1[କଦାଚିତ୍]
+E --> E1[ଯୁଦ୍ଧ ସ୍ଥଳ]
+F --> F1[ଭୂବିଜ୍ଞାନୀ]
+G --> G1[ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ]
+H --> H1[ସୈନିକ ଦଳ]
+I --> I1[ଶିକ୍ଷା]
+J --> J1[ଗାଳି]
+K --> K1[ମୁଠି]`,
+
+        mcq: {
+            questions: [
+                {
+                    question: "Divorced ର ଅର୍ଥ କଣ?",
+                    options: ["ବାପା ମାଆ ଏକାଠି", "ବାପା ମାଆ ଅଲଗା", "ବାପା ମାଆ ଖୁସି", "ବାପା ମାଆ ରାଗିଲେ"],
+                    correct: 1
+                },
+                {
+                    question: "Kazakhstan କଣ?",
+                    options: ["ସହରର ନାମ", "ଦେଶର ନାମ", "ନଦୀର ନାମ", "ପାହାଡ଼ର ନାମ"],
+                    correct: 1
+                },
+                {
+                    question: "Seldom ର ଅର୍ଥ କଣ?",
+                    options: ["ସବୁବେଳେ", "କଦାଚିତ୍", "ପ୍ରତିଦିନ", "ସପ୍ତାହକୁ"],
+                    correct: 1
+                },
+                {
+                    question: "Geologist କଣ ଅଧ୍ୟୟନ କରେ?",
+                    options: ["ପଶୁ", "ମାଟି ପଥର", "ତାରା", "ଗଛ"],
+                    correct: 1
+                },
+                {
+                    question: "Concerts କଣ?",
+                    options: ["ଖାଦ୍ୟ ଅନୁଷ୍ଠାନ", "ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ", "ନାଚ ଅନୁଷ୍ଠାନ", "ଖେଳ ଅନୁଷ୍ଠାନ"],
+                    correct: 1
+                },
+                {
+                    question: "Troops କଣ?",
+                    options: ["ଶିକ୍ଷକ ଦଳ", "ସୈନିକ ଦଳ", "ଛାତ୍ର ଦଳ", "ଶ୍ରମିକ ଦଳ"],
+                    correct: 1
+                },
+                {
+                    question: "Education ର ଅର୍ଥ କଣ?",
+                    options: ["ଖେଳିବା", "ଶିଖିବା", "ଶୋଇବା", "ଖାଇବା"],
+                    correct: 1
+                },
+                {
+                    question: "Swear ର ଅର୍ଥ କଣ?",
+                    options: ["ଭଲ ଶବ୍ଦ", "ଗାଳି", "ମିଠା ଶବ୍ଦ", "ଦୟାଳୁ ଶବ୍ଦ"],
+                    correct: 1
+                },
+                {
+                    question: "Fists କଣ?",
+                    options: ["ଖୋଲା ହାତ", "ବନ୍ଦ ହାତ", "ବଡ ହାତ", "ଛୋଟ ହାତ"],
+                    correct: 1
+                }
+            ]
+        },
+
+        trueFalse: {
+            questions: [
+                {
+                    question: "Divorce ର ଅର୍ଥ ଛାଡପତ୍ର ।",
+                    correct: true
+                },
+                {
+                    question: "Divorced ର ଅର୍ଥ ଏକାଠି ରହିବା ।",
+                    correct: false
+                },
+                {
+                    question: "Kazakhstan ହେଉଛି ଦେଶର ନାମ ।",
+                    correct: true
+                },
+                {
+                    question: "Kazakhstan ହେଉଛି ସହରର ନାମ ।",
+                    correct: false
+                },
+                {
+                    question: "Seldom ର ଅର୍ଥ କଦାଚିତ୍ ।",
+                    correct: true
+                },
+                {
+                    question: "Seldom ର ଅର୍ଥ ସବୁବେଳେ ।",
+                    correct: false
+                },
+                {
+                    question: "Front ର ଅର୍ଥ ଯୁଦ୍ଧ ସ୍ଥଳ ।",
+                    correct: true
+                },
+                {
+                    question: "Front ର ଅର୍ଥ ବଜାର ସ୍ଥଳ ।",
+                    correct: false
+                },
+                {
+                    question: "Geologist ମାଟି ପଥର ଅଧ୍ୟୟନ କରେ ।",
+                    correct: true
+                },
+                {
+                    question: "Geologist ତାରା ଅଧ୍ୟୟନ କରେ ।",
+                    correct: false
+                },
+                {
+                    question: "Concerts ହେଉଛି ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ ।",
+                    correct: true
+                },
+                {
+                    question: "Concerts ହେଉଛି ଖାଦ୍ୟ ଅନୁଷ୍ଠାନ ।",
+                    correct: false
+                },
+                {
+                    question: "Troops ହେଉଛି ସୈନିକ ଦଳ ।",
+                    correct: true
+                },
+                {
+                    question: "Troops ହେଉଛି ଶିକ୍ଷକ ଦଳ ।",
+                    correct: false
+                },
+                {
+                    question: "Education ର ଅର୍ଥ ଶିଖିବା ।",
+                    correct: true
+                },
+                {
+                    question: "Education ର ଅର୍ଥ କେବଳ ଖେଳିବା ।",
+                    correct: false
+                },
+                {
+                    question: "Swear ର ଅର୍ଥ ଗାଳି ।",
+                    correct: true
+                },
+                {
+                    question: "Swear ର ଅର୍ଥ ଭଲ ଶବ୍ଦ ।",
+                    correct: false
+                },
+                {
+                    question: "Fists ର ଅର୍ଥ ବନ୍ଦ ହାତ ।",
+                    correct: true
+                },
+                {
+                    question: "Fists ର ଅର୍ଥ ଖୋଲା ହାତ ।",
+                    correct: false
+                }
+            ]
+        },
+
+        fillBlanks: {
+            questions: [
+                {
+                    question: "___ ର ଅର୍ଥ ଛାଡପତ୍ର ।",
+                    answer: "Divorce"
+                },
+                {
+                    question: "___ ହେଉଛି ଦେଶର ନାମ ।",
+                    answer: "Kazakhstan"
+                },
+                {
+                    question: "___ ର ଅର୍ଥ କଦାଚିତ୍ ।",
+                    answer: "Seldom"
+                },
+                {
+                    question: "___ ମାଟି ପଥର ଅଧ୍ୟୟନ କରେ ।",
+                    answer: "Geologist"
+                },
+                {
+                    question: "___ ହେଉଛି ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ ।",
+                    answer: "Concerts"
+                },
+                {
+                    question: "___ ହେଉଛି ସୈନିକ ଦଳ ।",
+                    answer: "Troops"
+                },
+                {
+                    question: "___ ର ଅର୍ଥ ଶିଖିବା ।",
+                    answer: "Education"
+                },
+                {
+                    question: "___ ର ଅର୍ଥ ଗାଳି ।",
+                    answer: "Swear"
+                },
+                {
+                    question: "___ ର ଅର୍ଥ ବନ୍ଦ ହାତ ।",
+                    answer: "Fists"
+                }
+            ]
+        },
+
+        matching: {
+            pairs: [
+                { left: "Divorced", right: "ଛାଡପତ୍ର" },
+                { left: "Kazakhstan", right: "ଦେଶର ନାମ" },
+                { left: "Seldom", right: "କଦାଚିତ୍" },
+                { left: "Front", right: "ଯୁଦ୍ଧ ସ୍ଥଳ" },
+                { left: "Geologist", right: "ଭୂବିଜ୍ଞାନୀ" },
+                { left: "Concerts", right: "ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ" },
+                { left: "Troops", right: "ସୈନିକ ଦଳ" },
+                { left: "Education", right: "ଶିକ୍ଷା" },
+                { left: "Swear", right: "ଗାଳି" },
+                { left: "Fists", right: "ମୁଠି" }
+            ]
+        },
+
+      arrange: {
+    questions: [
+        {
+            words: ["divorced", "are", "Parents"],
+            correct: "Parents are divorced"
+        },
+        {
+            words: ["Kazakhstan", "in", "lives", "Father"],
+            correct: "Father lives in Kazakhstan"
+        },
+        {
+            words: ["letters", "writes", "Father", "seldom"],
+            correct: "Father seldom writes letters"
+        },
+        {
+            words: ["front", "to", "went", "Mother"],
+            correct: "Mother went to front"
+        },
+        {
+            words: ["geologist", "a", "was", "Mother"],
+            correct: "Mother was a geologist"
+        },
+        {
+            words: ["concerts", "gave", "Mother"],
+            correct: "Mother gave concerts"
+        },
+        {
+            words: ["troops", "for", "sang", "Mother"],
+            correct: "Mother sang for troops"
+        },
+        {
+            words: ["education", "street", "got", "Author"],
+            correct: "Author got street education"
+        },
+        {
+            words: ["swear", "to", "learned", "Author"],
+            correct: "Author learned to swear"
+        },
+        {
+            words: ["ready", "fists", "kept", "Author"],
+            correct: "Author kept fists ready"
+        }
+    ]
+},
+
+        stq: {
+            questions: [
+                {
+                    question: "Divorce ର ଅର୍ଥ କଣ?",
+                    answer: "Divorced ର ଅର୍ଥ ଛାଡପତ୍ର ।"
+                },
+                {
+                    question: "Kazakhstan କଣ?",
+                    answer: "Kazakhstan ହେଉଛି ଦେଶର ନାମ ।"
+                },
+                {
+                    question: "Seldom ର ଅର୍ଥ କଣ?",
+                    answer: "Seldom ର ଅର୍ଥ କଦାଚିତ୍ ।"
+                },
+                {
+                    question: "Front କଣ?",
+                    answer: "Front ହେଉଛି ଯୁଦ୍ଧ ସ୍ଥଳ ।"
+                },
+                {
+                    question: "Geologist କଣ କରେ?",
+                    answer: "Geologist ମାଟି ପଥର ଅଧ୍ୟୟନ କରେ ।"
+                },
+                {
+                    question: "Concerts କଣ?",
+                    answer: "Concerts ହେଉଛି ସଙ୍ଗୀତ ଅନୁଷ୍ଠାନ ।"
+                },
+                {
+                    question: "Troops କଣ?",
+                    answer: "Troops ହେଉଛି ସୈନିକ ଦଳ ।"
+                },
+                {
+                    question: "Education ର ଅର୍ଥ କଣ?",
+                    answer: "Education ର ଅର୍ଥ ଶିଖିବା ।"
+                },
+                {
+                    question: "Swear ର ଅର୍ଥ କଣ?",
+                    answer: "Swear ର ଅର୍ଥ ଗାଳି ।"
+                },
+                {
+                    question: "Fists କଣ?",
+                    answer: "Fists ହେଉଛି ବନ୍ଦ ହାତ ।"
+                }
+            ]
+        }
+    },
+{
+    text: "<br>👉 Author lived alone. Author lived in Moscow. Author's parents divorced. <br><br>👉 Author's father left. Father went to Kazakhstan. Father married again. Father had two children. Father never wrote letters. <br><br>👉 Author's mother left too. Mother went to war. Mother sang for soldiers. <br><br>👉 Author had no family. Author lived on streets. Streets taught author things. Author learned bad habits. Author learned to fight. Author learned no fear. Author fears no one.",
+    
+    audio: "https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3",
+    
+    mermaid: `graph LR
+
+A[Author lived alone] --> B[Family left author]
+
+B --> B1[Parents divorced]
+B --> B2[Father in Kazakhstan]
+B --> B3[Father remarried]
+B --> B4[Father had two children]
+B --> B5[Father never wrote]
+B --> B6[Mother at war]
+B --> B7[Mother sang songs]
+
+A --> C[Street life]
+
+C --> C1[Grew on streets]
+C --> C2[Learned bad habits]
+C --> C3[Learned to fight]
+C --> C4[Learned no fear]
+`,
+
+    mcq: {
+        questions: [
+            {
+                question: "Where did author live?",
+                options: ["Kazakhstan", "Moscow", "Kiev", "Delhi"],
+                correct: 1
+            },
+            {
+                question: "Where was author's father?",
+                options: ["In Moscow", "In Kazakhstan", "In Germany", "At home"],
+                correct: 1
+            },
+            {
+                question: "What did mother do?",
+                options: ["Mother did farming", "Mother worked in office", "Mother sang for soldiers", "Mother stayed home"],
+                correct: 2
+            },
+            {
+                question: "What did streets teach?",
+                options: ["Writing letters", "Reading books", "Fighting without fear", "Singing songs"],
+                correct: 2
+            },
+            {
+                question: "Who taught author courage?",
+                options: ["Author's teacher", "Author's mother", "The streets", "Author's father"],
+                correct: 2
+            }
+        ]
+    },
+
+    trueFalse: {
+        questions: [
+            {
+                question: "Author lived alone.",
+                correct: true
+            },
+            {
+                question: "Parents stayed together.",
+                correct: false
+            },
+            {
+                question: "Father was in Kazakhstan.",
+                correct: true
+            },
+            {
+                question: "Father wrote letters regularly.",
+                correct: false
+            },
+            {
+                question: "Mother went to war.",
+                correct: true
+            },
+            {
+                question: "Mother never sang songs.",
+                correct: false
+            },
+            {
+                question: "Author grew on streets.",
+                correct: true
+            },
+            {
+                question: "Streets taught good habits.",
+                correct: false
+            },
+            {
+                question: "Streets taught fighting.",
+                correct: true
+            },
+            {
+                question: "Author feared powerful people.",
+                correct: false
+            }
+        ]
+    },
+
+    fillBlanks: {
+        questions: [
+            {
+                question: "Author lived in ___.",
+                answer: "Moscow"
+            },
+            {
+                question: "Author's parents ___.",
+                answer: "divorced"
+            },
+            {
+                question: "Father was in ___.",
+                answer: "Kazakhstan"
+            },
+            {
+                question: "Father had ___ children.",
+                answer: "two"
+            },
+            {
+                question: "Father never wrote ___.",
+                answer: "letters"
+            },
+            {
+                question: "Mother went to ___.",
+                answer: "war"
+            },
+            {
+                question: "Mother sang for ___.",
+                answer: "soldiers"
+            },
+            {
+                question: "Author grew on ___.",
+                answer: "streets"
+            },
+            {
+                question: "Streets taught ___ habits.",
+                answer: "bad"
+            },
+            {
+                question: "Streets taught author ___.",
+                answer: "fighting"
+            },
+            {
+                question: "Author learned no ___.",
+                answer: "fear"
+            },
+            {
+                question: "Author fears no ___.",
+                answer: "one"
+            }
+        ]
+    },
+
+    matching: {
+        pairs: [
+            { left: "Moscow", right: "Author lived here alone" },
+            { left: "Father", right: "Went to Kazakhstan" },
+            { left: "Mother", right: "Sang for soldiers" },
+            { left: "Streets", right: "Taught author to fight" },
+            { left: "Fear", right: "Author learned none" }
+        ]
+    },
+
+    arrange: {
+        questions: [
+            {
+                words: ["lived", "Author", "alone"],
+                correct: "Author lived alone"
+            },
+            {
+                words: ["parents", "Author's", "divorced"],
+                correct: "Author's parents divorced"
+            },
+            {
+                words: ["father", "Author's", "left"],
+                correct: "Author's father left"
+            },
+            {
+                words: ["married", "Father", "again"],
+                correct: "Father married again"
+            },
+            {
+                words: ["two", "had", "Father", "children"],
+                correct: "Father had two children"
+            },
+            {
+                words: ["wrote", "never", "Father", "letters"],
+                correct: "Father never wrote letters"
+            },
+            {
+                words: ["went", "Mother", "to", "war"],
+                correct: "Mother went to war"
+            },
+            {
+                words: ["sang", "Mother", "for", "soldiers"],
+                correct: "Mother sang for soldiers"
+            },
+            {
+                words: ["on", "grew", "Author", "streets"],
+                correct: "Author grew on streets"
+            },
+            {
+                words: ["bad", "learned", "Author", "habits"],
+                correct: "Author learned bad habits"
+            },
+            {
+                words: ["fight", "learned", "to", "Author"],
+                correct: "Author learned to fight"
+            },
+            {
+                words: ["no", "learned", "Author", "fear"],
+                correct: "Author learned no fear"
+            },
+            {
+                words: ["one", "no", "fears", "Author"],
+                correct: "Author fears no one"
+            }
+        ]
+    },
+
+    stq: {
+        questions: [
+            {
+                question: "Where did author live?",
+                answer: "Author lived in Moscow."
+            },
+            {
+                question: "Where was author's father?",
+                answer: "Father was in Kazakhstan."
+            },
+            {
+                question: "What did mother do?",
+                answer: "Mother sang for soldiers."
+            },
+            {
+                question: "What did streets teach?",
+                answer: "Streets taught fighting."
+            },
+            {
+                question: "Did author fear anyone?",
+                answer: "Author feared no one."
+            }
+        ]
+    }
+},
+                
+],
+summary: {
+    audio: "https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3",
+    
+    // REPLACE THIS: Comprehensive Summary Mermaid
+    summaryMermaid: `graph LR
+A[Author lived in Moscow<br/>ଲେଖକ ମସ୍କୋରେ ରହୁଥିଲେ] --> B[Family Breakdown<br/>ପରିବାର ବିଚ୍ଛେଦ]
+A --> C[Mother's Departure<br/>ମାଆଙ୍କ ବିଦାୟ]
+A --> D[Life on Streets<br/>ରାସ୍ତା ଜୀବନ]
+
+B --> B1[Parents divorced<br/>ପିତାମାତା ଛାଡ଼ାଛାଡ଼ି ହେଲେ]
+B --> B2[Father to Kazakhstan<br/>ବାପା କାଜାଖସ୍ତାନ ଗଲେ]
+B --> B3[Father married again<br/>ବାପା ପୁଣି ବିବାହ କଲେ]
+B --> B4[Father had 2 children<br/>ବାପାଙ୍କର ଦୁଇ ସନ୍ତାନ]
+B --> B5[Never wrote letters<br/>ଚିଠି ଲେଖିଲେ ନାହିଁ]
+
+C --> C1[Mother left too<br/>ମା ମଧ୍ୟ ଚାଲିଗଲେ]
+C --> C2[Mother to war<br/>ମା ଯୁଦ୍ଧକୁ ଗଲେ]
+C --> C3[Sang for soldiers<br/>ସୈନିକଙ୍କ ପାଇଁ ଗୀତ]
+C --> C4[No family<br/>କୌଣସି ପରିବାର ନାହିଁ]
+
+D --> D1[Streets became home<br/>ରାସ୍ତା ଘର ହେଲା]
+D --> D2[Streets became teacher<br/>ରାସ୍ତା ଶିକ୍ଷକ ହେଲା]
+D --> D3[No family to help<br/>ସାହାଯ୍ୟ କରିବାକୁ କେହି ନାହିଁ]
+
+D --> E[Learning Bad Habits<br/>ଖରାପ ଅଭ୍ୟାସ]
+E --> E1[Streets taught bad habits<br/>ରାସ୍ତା ଖରାପ ଅଭ୍ୟାସ ଶିଖାଇଲା]
+E --> E2[Survival needed bad things<br/>ବଞ୍ଚିବା ପାଇଁ ଖରାପ କାମ]
+
+D --> F[Learning to Fight<br/>ମାଡ଼ମାଡ଼ି ଶିଖିବା]
+F --> F1[Learned to fight<br/>ମାଡ଼ମାଡ଼ି ଶିଖିଲେ]
+F --> F2[Fighting helped survive<br/>ମାଡ଼ମାଡ଼ି ବଞ୍ଚିବାରେ ସାହାଯ୍ୟ]
+
+D --> G[Becoming Fearless<br/>ନିର୍ଭୀକ ହେବା]
+G --> G1[Became fearless<br/>ବହୁତ ନିର୍ଭୀକ ହେଲେ]
+G --> G2[Fears no one<br/>କାହାକୁ ଡରନ୍ତି ନାହିଁ]
+G --> G3[Streets made strong<br/>ରାସ୍ତା ଶକ୍ତିଶାଳୀ କଲା]
+
+A --> H[Conclusion<br/>ନିଷ୍କର୍ଷ]
+H --> H1[Tough childhood<br/>କଷ୍ଟକର ପିଲାଦିନ]
+H --> H2[Parents left<br/>ଦୁହେଁ ପିତାମାତା ଛାଡ଼ିଦେଲେ]
+H --> H3[Survived on streets<br/>ରାସ୍ତାରେ ବଞ୍ଚିଲେ]
+H --> H4[Streets made fearless<br/>ରାସ୍ତା ନିର୍ଭୀକ କଲା]
+
+style A fill:#667eea,color:#fff
+style B fill:#f5576c,color:#fff
+style C fill:#f093fb,color:#fff
+style D fill:#43e97b,color:#fff
+style E fill:#fa709a,color:#fff
+style F fill:#30cfd0,color:#fff
+style G fill:#4facfe,color:#fff
+style H fill:#eb3349,color:#fff`,
+
+    // REPLACE THIS: Comprehensive Question Mermaid
+    questionMermaid: `graph LR
+Q[What happened in childhood?<br/>ପିଲାଦିନରେ କ'ଣ ହେଲା?] --> I[Introduction<br/>ପରିଚୟ]
+
+I --> I1[Difficult childhood<br/>କଷ୍ଟକର ପିଲାଦିନ]
+I --> I2[Parents left author<br/>ପିତାମାତା ଛାଡ଼ିଦେଲେ]
+I --> I3[Lived on streets<br/>ରାସ୍ତାରେ ରହିଲେ]
+
+Q --> P1[Point 1:<br/>Parents divorced<br/>ପିତାମାତା ଛାଡ଼ାଛାଡ଼ି ହେଲେ]
+Q --> P2[Point 2:<br/>Father to Kazakhstan<br/>ବାପା କାଜାଖସ୍ତାନ ଗଲେ]
+Q --> P3[Point 3:<br/>Mother to war<br/>ମା ଯୁଦ୍ଧକୁ ଗଲେ]
+Q --> P4[Point 4:<br/>Lived on streets<br/>ରାସ୍ତାରେ ରହିଲେ]
+Q --> P5[Point 5:<br/>Learned bad habits<br/>ଖରାପ ଅଭ୍ୟାସ ଶିଖିଲେ]
+Q --> P6[Point 6:<br/>Became fearless<br/>ନିର୍ଭୀକ ହୋଇଗଲେ]
+
+Q --> C[Conclusion<br/>ନିଷ୍କର୍ଷ]
+C --> C1[Shows difficult childhood<br/>କଷ୍ଟକର ପିଲାଦିନ ଦେଖାଏ]
+C --> C2[Both parents abandoned<br/>ଦୁହେଁ ପିତାମାତା ଛାଡ଼ିଦେଲେ]
+C --> C3[Survived alone<br/>ଏକୁଟିଆ ବଞ୍ଚିଲେ]
+C --> C4[Streets made strong<br/>ରାସ୍ତା ଶକ୍ତିଶାଳୀ କଲା]
+
+style Q fill:#667eea,color:#fff
+style I fill:#f093fb,color:#fff
+style P1 fill:#f5576c,color:#fff
+style P2 fill:#f5576c,color:#fff
+style P3 fill:#f5576c,color:#fff
+style P4 fill:#43e97b,color:#fff
+style P5 fill:#fa709a,color:#fff
+style P6 fill:#4facfe,color:#fff
+style C fill:#eb3349,color:#fff`,
+    
+    content: {
+        introduction: "Author lived in Moscow. ଲେଖକ ମସ୍କୋରେ ରହୁଥିଲେ। Parents left the author. ପିତାମାତା ଛାଡ଼ିଦେଲେ। Author lived on streets. ଲେଖକ ରାସ୍ତାରେ ରହିଲେ। Streets taught many things. ରାସ୍ତା ଅନେକ କଥା ଶିଖାଇଲା।",
+        sentences: [
+            {
+                heading: "Family Breakdown",
+                text: "Parents divorced early on. ପିତାମାତା ଛାଡ଼ାଛାଡ଼ି ହେଲେ। Father went to Kazakhstan. ବାପା କାଜାଖସ୍ତାନ ଗଲେ। Father married again there. ବାପା ପୁଣି ବିବାହ କଲେ। Father had two children. ବାପାଙ୍କର ଦୁଇ ସନ୍ତାନ ହେଲା। Father never wrote letters. ବାପା କେବେ ଚିଠି ଲେଖିଲେ ନାହିଁ।"
+            },
+            {
+                heading: "Mother's Departure",
+                text: "Mother left too. ମା ମଧ୍ୟ ଚାଲିଗଲେ। Mother went to war. ମା ଯୁଦ୍ଧକୁ ଗଲେ। Mother sang for soldiers. ମା ସୈନିକମାନଙ୍କ ପାଇଁ ଗୀତ ଗାଇଲେ। Author had no family. ଲେଖକଙ୍କର କୌଣସି ପରିବାର ନଥିଲା।"
+            },
+            {
+                heading: "Life on Streets",
+                text: "Author lived on streets. ଲେଖକ ରାସ୍ତାରେ ରହିଲେ। Streets became the home. ରାସ୍ତା ଘର ହୋଇଗଲା। Streets became the teacher. ରାସ୍ତା ଶିକ୍ଷକ ହୋଇଗଲା। No family to help. ସାହାଯ୍ୟ କରିବାକୁ କେହି ନଥିଲେ।"
+            },
+            {
+                heading: "Learning Bad Habits",
+                text: "Streets taught bad habits. ରାସ୍ତା ଖରାପ ଅଭ୍ୟାସ ଶିଖାଇଲା। Survival needed bad things. ବଞ୍ଚିବା ପାଇଁ ଖରାପ କାମ ଦରକାର। Author learned these things. ଲେଖକ ଏସବୁ ଶିଖିଲେ।"
+            },
+            {
+                heading: "Learning to Fight",
+                text: "Author learned to fight. ଲେଖକ ମାଡ଼ମାଡ଼ି ଶିଖିଲେ। Fighting helped to survive. ମାଡ଼ମାଡ଼ି ବଞ୍ଚିବାରେ ସାହାଯ୍ୟ କଲା। Streets taught this skill. ରାସ୍ତା ଏହି କୌଶଳ ଶିଖାଇଲା।"
+            },
+            {
+                heading: "Becoming Fearless",
+                text: "Author became very fearless. ଲେଖକ ବହୁତ ନିର୍ଭୀକ ହୋଇଗଲେ। Author fears no one. ଲେଖକ କାହାକୁ ଡରନ୍ତି ନାହିଁ। Streets made author strong. ରାସ୍ତା ଲେଖକଙ୍କୁ ଶକ୍ତିଶାଳୀ କଲା।"
+            }
+        ],
+        conclusion: "Author had tough childhood. ଲେଖକଙ୍କ କଷ୍ଟକର ପିଲାଦିନ ଥିଲା। Both parents left author. ଦୁହେଁ ପିତାମାତା ଛାଡ଼ିଦେଲେ। Author survived on streets. ରାସ୍ତାରେ ବଞ୍ଚିଲେ। Streets made author fearless. ରାସ୍ତା ନିର୍ଭୀକ କଲା।"
+    },
+    question: {
+        audio: "https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3",
+        question: "What happened in childhood? ପିଲାଦିନରେ କ'ଣ ହେଲା?",
+        introduction: "Author had difficult childhood. ଲେଖକଙ୍କ କଷ୍ଟକର ପିଲାଦିନ ଥିଲା। Parents left the author. ପିତାମାତା ଛାଡ଼ିଦେଲେ। Author lived on streets. ଲେଖକ ରାସ୍ତାରେ ରହିଲେ। Main events are below: ମୁଖ୍ୟ ଘଟଣାଗୁଡ଼ିକ ହେଉଛି:",
+        points: [
+            "Parents divorced. ପିତାମାତା ଛାଡ଼ାଛାଡ଼ି ହେଲେ।",
+            "Father went to Kazakhstan. ବାପା କାଜାଖସ୍ତାନ ଗଲେ।",
+            "Mother went to war. ମା ଯୁଦ୍ଧକୁ ଗଲେ।",
+            "Author lived on streets. ଲେଖକ ରାସ୍ତାରେ ରହିଲେ।",
+            "Learned bad habits. ଖରାପ ଅଭ୍ୟାସ ଶିଖିଲେ।",
+            "Became fearless. ନିର୍ଭୀକ ହୋଇଗଲେ।"
+        ],
+        conclusion: "These events show difficult childhood. ଏହି ଘଟଣାଗୁଡ଼ିକ କଷ୍ଟକର ପିଲାଦିନ ଦେଖାଏ। Both parents abandoned author. ଦୁହେଁ ପିତାମାତା ଛାଡ଼ିଦେଲେ। Author survived alone. ଲେଖକ ଏକୁଟିଆ ବଞ୍ଚିଲେ। Streets made author strong. ରାସ୍ତା ଶକ୍ତିଶାଳୀ କଲା।"
+    }
+}
+        };
+
+        let currentSentence = 0;
+        let currentAudio = null;
+        let scores = { mcq: 0, tf: 0, fib: 0, matching: 0, arrange: 0 };
+// ============================================
+// NEW AUDIO MANAGEMENT SYSTEM - ADD THIS
+// ============================================
+
+let currentAudioButton = null;
+
+function createAudioButton(audioUrl, containerId = null) {
+    if (!audioUrl || audioUrl.includes('example.com')) {
+        return ''; // Return empty string if no valid audio
+    }
+    
+    const buttonId = containerId ? `audio-btn-${containerId}` : `audio-btn-${Date.now()}`;
+    return `<button class="audio-control-btn" id="${buttonId}" data-audio="${audioUrl}" onclick="toggleAudio('${buttonId}', '${audioUrl}')">
+        🔊
+    </button>`;
+}
+
+function toggleAudio(buttonId, audioUrl) {
+    const button = document.getElementById(buttonId);
+    
+    // If this button's audio is currently playing, stop it
+    if (currentAudio && currentAudioButton === buttonId) {
+        stopAudio();
+        return;
+    }
+    
+    // Stop any currently playing audio
+    stopAudio();
+    
+    // Start new audio
+    playNewAudio(buttonId, audioUrl);
+}
+
+function playNewAudio(buttonId, audioUrl) {
+    const button = document.getElementById(buttonId);
+    
+    if (!audioUrl || audioUrl.includes('example.com')) {
+        return;
+    }
+    
+    try {
+        currentAudio = new Audio(audioUrl);
+        currentAudioButton = buttonId;
+        
+        // Update button appearance
+        button.textContent = '⏸️';
+        button.classList.add('playing');
+        
+        // Handle play
+        currentAudio.play().catch(error => {
+            console.log('Playback error:', error);
+            stopAudio();
+        });
+        
+        // Handle audio end
+        currentAudio.addEventListener('ended', () => {
+            stopAudio();
+        });
+        
+        // Handle errors
+        currentAudio.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            stopAudio();
+        });
+        
+    } catch (error) {
+        console.error('Error creating audio:', error);
+        stopAudio();
+    }
+}
+
+function stopAudio() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+    }
+    
+    if (currentAudioButton) {
+        const button = document.getElementById(currentAudioButton);
+        if (button) {
+            button.textContent = '🔊';
+            button.classList.remove('playing');
+        }
+        currentAudioButton = null;
+    }
+}
+
+// Clean up audio when leaving a test
+function cleanupAudio() {
+    stopAudio();
+}
+
+// ============================================
+// END OF NEW AUDIO MANAGEMENT SYSTEM
+// ============================================
+
+        let maxScores = { mcq: 0, tf: 0, fib: 0, matching: 0, arrange: 0 };
+        let completedTests = { mcq: false, tf: false, fib: false, matching: false, arrange: false, stq: false };
+        let isSummaryScreen = false;
+
+        
+        const sentenceText = document.getElementById('sentenceText');
+        const testContainer = document.getElementById('testContainer');
+        const progressFill = document.getElementById('progressFill');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const totalScoreEl = document.getElementById('totalScore');
+        const maxScoreEl = document.getElementById('maxScore');
+
+        const mcqBtn = document.getElementById('mcqBtn');
+        const tfBtn = document.getElementById('tfBtn');
+        const fibBtn = document.getElementById('fibBtn');
+        const matchBtn = document.getElementById('matchBtn');
+        const arrangeBtn = document.getElementById('arrangeBtn');
+        const stqBtn = document.getElementById('stqBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        
+
+      
+// Function to show/hide mermaid diagram
+document.getElementById('mermaidBtn').addEventListener('click', function() {
+    const container = document.getElementById('mermaidContainer');
+    
+    if (container.classList.contains('active')) {
+        container.classList.remove('active');
+        this.textContent = '📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..';
+    } else {
+        loadMermaidDiagram();
+        container.classList.add('active');
+        this.textContent = '✖️ ଚିତ୍ରକୁ ବନ୍ଦ କରିବା';
+    }
+});
+
+function loadMermaidDiagram() {
+    if (isSummaryScreen) return;
+    
+    const sentence = courseData.sentences[currentSentence];
+    const container = document.getElementById('mermaidContainer');
+    
+    if (sentence.mermaid) {
+        // Create unique ID for this diagram
+        const diagramId = `mermaid-diagram-${currentSentence}`;
+        
+        container.innerHTML = `
+            <h3>📊 ଏହି ଚିତ୍ର ମାଧ୍ୟମରେ ମନେରଖିବାକୁ ଚେଷ୍ଟା କରନ୍ତୁ : </h3>
+            <div id="${diagramId}" class="mermaid">
+                ${sentence.mermaid}
+            </div>
+        `;
+        
+        // Render the mermaid diagram
+        mermaid.run({
+            nodes: document.querySelectorAll(`#${diagramId}`)
+        });
+    } else {
+        container.innerHTML = '<h3>No diagram available for this sentence</h3>';
+    }
+}
+
+  function loadSentence(index) {
+    scrollToTop();
+    cleanupAudio();
+    isSummaryScreen = false;
+    
+    // ADD THIS LINE - Reset scores for new sentence
+    scores = { mcq: 0, tf: 0, fib: 0, matching: 0, arrange: 0 };
+    
+    const sentence = courseData.sentences[index];
+    
+    // Add audio button to sentence text if valid audio exists
+    const audioButton = createAudioButton(sentence.audio, `sentence-${index}`);
+    sentenceText.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <div style="flex: 1;">${sentence.text}</div>
+            ${audioButton}
+        </div>
+    `;
+    
+    testContainer.innerHTML = '';
+    
+    // Hide mermaid diagram when loading new sentence
+    const mermaidContainer = document.getElementById('mermaidContainer');
+    mermaidContainer.classList.remove('active');
+    document.getElementById('mermaidBtn').textContent = '📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..';
+    document.getElementById('mermaidBtn').style.display = 'block';
+    
+    completedTests = { mcq: false, tf: false, fib: false, matching: false, arrange: false, stq: false };
+    
+    mcqBtn.disabled = false;
+    tfBtn.disabled = false;
+    fibBtn.disabled = false;
+    matchBtn.disabled = false;
+    arrangeBtn.disabled = false;
+    stqBtn.disabled = false;
+    
+    nextBtn.disabled = false;
+    prevBtn.disabled = currentSentence === 0;
+    
+    const data = sentence;
+    maxScores.mcq = data.mcq.questions.length;
+    maxScores.tf = data.trueFalse.questions.length;
+    maxScores.fib = data.fillBlanks.questions.length;
+    maxScores.matching = data.matching.pairs.length;
+    maxScores.arrange = data.arrange.questions.length;
+    
+    updateProgress();
+    updateScoreDisplay();
+}
+
+function scrollToTop() {
+    const contentSection = document.getElementById('contentSection') || document.querySelector('.content-section');
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // AGGRESSIVE MOBILE SCROLL - Multiple methods simultaneously
+        
+        // Method 1: Direct window scroll
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Method 2: Scroll all possible containers
+        if (contentSection) {
+            contentSection.scrollTop = 0;
+            contentSection.scrollTo(0, 0);
+        }
+        
+        const container = document.querySelector('.container');
+        if (container) {
+            container.scrollTop = 0;
+            container.scrollTo(0, 0);
+        }
+        
+        // Method 3: Use requestAnimationFrame for immediate rendering
+        requestAnimationFrame(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            if (contentSection) contentSection.scrollTop = 0;
+        });
+        
+        // Method 4: Repeated attempts with delays (mobile browsers need this)
+        [10, 20, 50, 100, 150, 200, 300].forEach(delay => {
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+                if (contentSection) contentSection.scrollTop = 0;
+            }, delay);
+        });
+        
+        // Method 5: Focus on top element (tricks mobile browser)
+        const topElement = document.querySelector('.progress-bar') || contentSection;
+        if (topElement) {
+            topElement.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+        
+    } else {
+        // Desktop: scroll the content section (existing code)
+        if (contentSection) {
+            const originalBehavior = contentSection.style.scrollBehavior;
+            contentSection.style.scrollBehavior = 'auto';
+            
+            contentSection.scrollTop = 0;
+            contentSection.scrollTo(0, 0);
+            
+            requestAnimationFrame(() => {
+                contentSection.scrollTop = 0;
+            });
+            
+            setTimeout(() => {
+                contentSection.scrollTop = 0;
+                contentSection.style.scrollBehavior = originalBehavior;
+            }, 10);
+            
+            setTimeout(() => contentSection.scrollTop = 0, 50);
+            setTimeout(() => contentSection.scrollTop = 0, 100);
+        }
+    }
+}
+        
+function loadSummary() {
+    scrollToTop();
+    cleanupAudio();
+    isSummaryScreen = true;
+    const summary = courseData.summary;
+    
+    const summaryAudioButton = createAudioButton(summary.audio, 'summary-audio');
+    const questionAudioButton = createAudioButton(summary.question.audio, 'summary-question-audio');
+    
+    // Create toggle buttons
+    let summaryHTML = `
+        <div class="summary-toggle-buttons">
+            <button class="summary-toggle-btn show-summary-btn" onclick="showSummaryContent()">
+                📚 ଦୀର୍ଘ ଉତ୍ତରମୂଳକ ପ୍ରଶ୍ନ 
+            </button>
+            <button class="summary-toggle-btn show-question-btn" onclick="showQuestionContent()">
+                📝 ସଂକ୍ଷିପ୍ତ ଉତ୍ତରମୂଳକ ପ୍ରଶ୍ନ 
+            </button>
+        </div>
+        
+        <div id="summaryContentDiv" class="summary-content" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <h2 style="color: #667eea; margin: 0;">📚 ସାରକଥା:</h2>
+                ${summaryAudioButton}
+            </div>
+            
+            <!-- ADD MERMAID BUTTON FOR SUMMARY -->
+            <button class="mermaid-btn" onclick="toggleSummaryMermaid()" style="margin-bottom: 12px;">
+                📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..
+            </button>
+            <div id="summaryMermaidContainer" class="mermaid-container"></div>
+            
+            <p>${summary.content.introduction}</p>
+            <ul>`;
+    
+    summary.content.sentences.forEach((item, index) => {
+        summaryHTML += `<li><strong>${item.heading}:</strong> ${item.text}</li>`;
+    });
+    
+    summaryHTML += `</ul>
+            <h3>ନିଷ୍କର୍ଷ : </h3>
+            <p>${summary.content.conclusion}</p>
+        </div>
+        
+        <div id="questionContentDiv" class="summary-question-content">
+            <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+                <h3 style="margin: 0; flex: 1;">${summary.question.question}</h3>
+                ${questionAudioButton}
+            </div>
+            
+            <!-- ADD MERMAID BUTTON FOR QUESTION -->
+            <button class="mermaid-btn" onclick="toggleQuestionMermaid()" style="margin-bottom: 12px;">
+                📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..
+            </button>
+            <div id="questionMermaidContainer" class="mermaid-container"></div>
+            
+            <p>${summary.question.introduction}</p>
+            <ul>`;
+    
+    summary.question.points.forEach(point => {
+        summaryHTML += `<li>${point}</li>`;
+    });
+    
+    summaryHTML += `</ul>
+            <p><strong>ନିଷ୍କର୍ଷ:</strong> ${summary.question.conclusion}</p>
+        </div>`;
+    
+    sentenceText.innerHTML = summaryHTML;
+    testContainer.innerHTML = '';
+    
+    // Hide main mermaid button on summary screen
+    const mermaidContainer = document.getElementById('mermaidContainer');
+    mermaidContainer.classList.remove('active');
+    document.getElementById('mermaidBtn').style.display = 'none';
+    
+    completedTests = { mcq: false, tf: false, fib: false, matching: false, arrange: false, stq: false };
+    
+    mcqBtn.disabled = false;
+    tfBtn.disabled = false;
+    fibBtn.disabled = false;
+    matchBtn.disabled = false;
+    arrangeBtn.disabled = false;
+    stqBtn.disabled = false;
+    
+    nextBtn.disabled = true;
+    prevBtn.disabled = false;
+    
+    calculateSummaryMaxScores();
+    updateProgress();
+    updateScoreDisplay();
+}
+function showSummaryContent() {
+    const summaryDiv = document.getElementById('summaryContentDiv');
+    const questionDiv = document.getElementById('questionContentDiv');
+    const summaryBtn = document.querySelector('.show-summary-btn');
+    const questionBtn = document.querySelector('.show-question-btn');
+    
+    // Toggle summary visibility
+    if (summaryDiv.style.display === 'none') {
+        summaryDiv.style.display = 'block';
+        questionDiv.classList.remove('active');
+        summaryBtn.classList.add('active');
+        questionBtn.classList.remove('active');
+    } else {
+        summaryDiv.style.display = 'none';
+        summaryBtn.classList.remove('active');
+    }
+}
+
+function showQuestionContent() {
+    const summaryDiv = document.getElementById('summaryContentDiv');
+    const questionDiv = document.getElementById('questionContentDiv');
+    const summaryBtn = document.querySelector('.show-summary-btn');
+    const questionBtn = document.querySelector('.show-question-btn');
+    
+    // Toggle question visibility
+    if (!questionDiv.classList.contains('active')) {
+        questionDiv.classList.add('active');
+        summaryDiv.style.display = 'none';
+        questionBtn.classList.add('active');
+        summaryBtn.classList.remove('active');
+    } else {
+        questionDiv.classList.remove('active');
+        questionBtn.classList.remove('active');
+    }
+}
+
+        // ADD THESE THREE NEW FUNCTIONS:
+
+function toggleSummaryMermaid() {
+    const container = document.getElementById('summaryMermaidContainer');
+    const button = event.target;
+    
+    if (container.classList.contains('active')) {
+        container.classList.remove('active');
+        button.textContent = '📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..';
+    } else {
+        loadSummaryMermaid();
+        container.classList.add('active');
+        button.textContent = '✖️ ଚିତ୍ରକୁ ବନ୍ଦ କରିବା';
+    }
+}
+
+function toggleQuestionMermaid() {
+    const container = document.getElementById('questionMermaidContainer');
+    const button = event.target;
+    
+    if (container.classList.contains('active')) {
+        container.classList.remove('active');
+        button.textContent = '📊 ଆସନ୍ତୁ, ଚିତ୍ର ଦେଖି ବୁଝିବା..';
+    } else {
+        loadQuestionMermaid();
+        container.classList.add('active');
+        button.textContent = '✖️ ଚିତ୍ରକୁ ବନ୍ଦ କରିବା';
+    }
+}
+
+function loadSummaryMermaid() {
+    const summary = courseData.summary;
+    const container = document.getElementById('summaryMermaidContainer');
+    
+    if (summary.summaryMermaid) {
+        const diagramId = `mermaid-summary-diagram`;
+        
+        container.innerHTML = `
+            <h3>📊 ସାରକଥା ଚିତ୍ର :</h3>
+            <div id="${diagramId}" class="mermaid">
+                ${summary.summaryMermaid}
+            </div>
+        `;
+        
+        mermaid.run({
+            nodes: document.querySelectorAll(`#${diagramId}`)
+        });
+    }
+}
+
+function loadQuestionMermaid() {
+    const summary = courseData.summary;
+    const container = document.getElementById('questionMermaidContainer');
+    
+    if (summary.questionMermaid) {
+        const diagramId = `mermaid-question-diagram`;
+        
+        container.innerHTML = `
+            <h3>📊 ପ୍ରଶ୍ନ ଚିତ୍ର :</h3>
+            <div id="${diagramId}" class="mermaid">
+                ${summary.questionMermaid}
+            </div>
+        `;
+        
+        mermaid.run({
+            nodes: document.querySelectorAll(`#${diagramId}`)
+        });
+    }
+}
+
+
+        
+        function calculateSummaryMaxScores() {
+            maxScores.mcq = 0;
+            maxScores.tf = 0;
+            maxScores.fib = 0;
+            maxScores.matching = 0;
+            maxScores.arrange = 0;
+            
+            courseData.sentences.forEach(sentence => {
+                maxScores.mcq += sentence.mcq.questions.length;
+                maxScores.tf += sentence.trueFalse.questions.length;
+                maxScores.fib += sentence.fillBlanks.questions.length;
+                maxScores.matching += sentence.matching.pairs.length;
+                maxScores.arrange += sentence.arrange.questions.length;
+            });
+        }
+
+        function updateProgress() {
+            if (isSummaryScreen) {
+                progressFill.style.width = '100%';
+            } else {
+                const progress = ((currentSentence + 1) / courseData.sentences.length) * 100;
+                progressFill.style.width = progress + '%';
+            }
+        }
+
+        function updateScoreDisplay() {
+            const total = Object.values(scores).reduce((a, b) => a + b, 0);
+            const max = Object.values(maxScores).reduce((a, b) => a + b, 0);
+            totalScoreEl.textContent = total;
+            maxScoreEl.textContent = max;
+            scoreDisplay.style.display = 'block';
+        }
+
+      function createMCQTest() {
+    cleanupAudio(); // Stop any playing audio
+    
+    let allQuestions = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach((sentence, sIndex) => {
+            sentence.mcq.questions.forEach(q => {
+                allQuestions.push({...q, sentenceIndex: sIndex});
+            });
+        });
+    } else {
+        const data = courseData.sentences[currentSentence].mcq;
+        allQuestions = data.questions.map(q => ({...q, sentenceIndex: currentSentence}));
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #667eea;">📝 ବିକଳ୍ପଯୁକ୍ତ ପ୍ରଶ୍ନ :: </h3>';
+    
+    allQuestions.forEach((q, qIndex) => {
+        const audioButton = createAudioButton(q.audio, `mcq-q${qIndex}`);
+        
+        html += `<div class="question" data-q="${qIndex}">
+            <div class="question-header">
+                <div class="question-text">${qIndex + 1}. ${q.question}</div>
+                ${audioButton}
+            </div>`;
+        
+        q.options.forEach((opt, oIndex) => {
+            html += `<div class="option" data-q="${qIndex}" data-o="${oIndex}">${opt}</div>`;
+        });
+        
+        html += '</div>';
+    });
+    
+    html += '<button class="submit-btn" onclick="submitMCQ()">ଉତ୍ତର ଦାଖଲ କରନ୍ତୁ ।</button></div>';
+    testContainer.innerHTML = html;
+    
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', function() {
+            const qNum = this.dataset.q;
+            document.querySelectorAll(`.option[data-q="${qNum}"]`).forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+}
+           
+        function submitMCQ() {
+            let allQuestions = [];
+            
+            if (isSummaryScreen) {
+                courseData.sentences.forEach(sentence => {
+                    sentence.mcq.questions.forEach(q => allQuestions.push(q));
+                });
+            } else {
+                allQuestions = courseData.sentences[currentSentence].mcq.questions;
+            }
+            
+            let score = 0;
+            
+            allQuestions.forEach((q, qIndex) => {
+                const selected = document.querySelector(`.option[data-q="${qIndex}"].selected`);
+                const options = document.querySelectorAll(`.option[data-q="${qIndex}"]`);
+                
+                options.forEach((opt, oIndex) => {
+                    if (oIndex === q.correct) {
+                        opt.classList.add('correct');
+                    }
+                    if (selected && selected.dataset.o == oIndex && oIndex !== q.correct) {
+                        opt.classList.add('wrong');
+                    }
+                });
+                
+                if (selected && selected.dataset.o == q.correct) {
+                    score++;
+                }
+            });
+            
+            scores.mcq += score;
+            completedTests.mcq = true;
+            updateScoreDisplay();
+            
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${score === allQuestions.length ? 'correct' : 'wrong'}`;
+            feedback.textContent = `ଆପଣ ମାର୍କ୍ ରଖିଛନ୍ତି : ${score}/${allQuestions.length}`;
+            testContainer.querySelector('.test-section').appendChild(feedback);
+            
+            testContainer.querySelector('.submit-btn').disabled = true;
+        }
+
+        function createTFTest() {
+    cleanupAudio();
+    
+    let allQuestions = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach(sentence => {
+            sentence.trueFalse.questions.forEach(q => allQuestions.push(q));
+        });
+    } else {
+        allQuestions = courseData.sentences[currentSentence].trueFalse.questions;
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #4facfe;">✓ ସତ୍ୟ/ମିଥ୍ୟା ଦର୍ଶାଇବାଯୁକ୍ତ ପ୍ରଶ୍ନ :</h3>';
+    
+    allQuestions.forEach((q, qIndex) => {
+        const audioButton = createAudioButton(q.audio, `tf-q${qIndex}`);
+        
+        html += `<div class="question" data-q="${qIndex}">
+            <div class="question-header">
+                <div class="question-text">${qIndex + 1}. ${q.question}</div>
+                ${audioButton}
+            </div>
+            <div class="option" data-q="${qIndex}" data-answer="true">ସତ୍ୟ</div>
+            <div class="option" data-q="${qIndex}" data-answer="false">ମିଥ୍ୟା</div>
+        </div>`;
+    });
+    
+    html += '<button class="submit-btn" onclick="submitTF()">ଉତ୍ତର ଦାଖଲ କରନ୍ତୁ । </button></div>';
+    testContainer.innerHTML = html;
+    
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', function() {
+            const qNum = this.dataset.q;
+            document.querySelectorAll(`.option[data-q="${qNum}"]`).forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+}
+           
+        function submitTF() {
+            let allQuestions = [];
+            
+            if (isSummaryScreen) {
+                courseData.sentences.forEach(sentence => {
+                    sentence.trueFalse.questions.forEach(q => allQuestions.push(q));
+                });
+            } else {
+                allQuestions = courseData.sentences[currentSentence].trueFalse.questions;
+            }
+            
+            let score = 0;
+            
+            allQuestions.forEach((q, qIndex) => {
+                const selected = document.querySelector(`.option[data-q="${qIndex}"].selected`);
+                const options = document.querySelectorAll(`.option[data-q="${qIndex}"]`);
+                
+                options.forEach(opt => {
+                    const isCorrect = (opt.dataset.answer === 'true') === q.correct;
+                    if (isCorrect) {
+                        opt.classList.add('correct');
+                    }
+                    if (selected && selected === opt && !isCorrect) {
+                        opt.classList.add('wrong');
+                    }
+                });
+                
+                if (selected && (selected.dataset.answer === 'true') === q.correct) {
+                    score++;
+                }
+            });
+            
+            scores.tf += score;
+            completedTests.tf = true;
+            updateScoreDisplay();
+            
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${score === allQuestions.length ? 'correct' : 'wrong'}`;
+            feedback.textContent = `ଆପଣ ମାର୍କ୍ ରଖିଛନ୍ତି : ${score}/${allQuestions.length}`;
+            testContainer.querySelector('.test-section').appendChild(feedback);
+            
+            testContainer.querySelector('.submit-btn').disabled = true;
+        }
+
+       function createFIBTest() {
+    cleanupAudio();
+    
+    let allQuestions = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach(sentence => {
+            sentence.fillBlanks.questions.forEach(q => allQuestions.push(q));
+        });
+    } else {
+        allQuestions = courseData.sentences[currentSentence].fillBlanks.questions;
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #43e97b;">✏️ ଶୂନ୍ୟ ସ୍ଥାନଗୁଡିକ ପୂରଣ କରନ୍ତୁ : </h3>';
+    
+    allQuestions.forEach((q, qIndex) => {
+        const audioButton = createAudioButton(q.audio, `fib-q${qIndex}`);
+        
+        html += `<div class="question" data-q="${qIndex}">
+            <div class="question-header">
+                <div class="question-text">${qIndex + 1}. ${q.question}</div>
+                ${audioButton}
+            </div>
+            <input type="text" class="input-box" data-q="${qIndex}" placeholder="ଏଠାରେ ଆପଣଙ୍କ ଉତ୍ତର ଲେଖନ୍ତୁ...">
+        </div>`;
+    });
+    
+    html += '<button class="submit-btn" onclick="submitFIB()">ଉତ୍ତର ଦାଖଲ କରନ୍ତୁ ।</button></div>';
+    testContainer.innerHTML = html;
+}
+
+           
+
+        function submitFIB() {
+            let allQuestions = [];
+            
+            if (isSummaryScreen) {
+                courseData.sentences.forEach(sentence => {
+                    sentence.fillBlanks.questions.forEach(q => allQuestions.push(q));
+                });
+            } else {
+                allQuestions = courseData.sentences[currentSentence].fillBlanks.questions;
+            }
+            
+            let score = 0;
+            
+            allQuestions.forEach((q, qIndex) => {
+                const input = document.querySelector(`.input-box[data-q="${qIndex}"]`);
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = q.answer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.style.borderColor = '#4CAF50';
+                    input.style.background = '#c8e6c9';
+                    score++;
+                } else {
+                    input.style.borderColor = '#f44336';
+                    input.style.background = '#ffcdd2';
+                    
+                    const correctMsg = document.createElement('div');
+                    correctMsg.style.cssText = 'margin-top: 8px; color: #2e7d32; font-size: 12px;';
+                    correctMsg.textContent = `ସଠିକ୍ ଉତ୍ତର ହେଉଛି: ${q.answer}`;
+                    input.parentElement.appendChild(correctMsg);
+                }
+                
+                input.disabled = true;
+            });
+            
+            scores.fib += score;
+            completedTests.fib = true;
+            updateScoreDisplay();
+            
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${score === allQuestions.length ? 'correct' : 'wrong'}`;
+            feedback.textContent = `ଆପଣ ମାର୍କ୍ ରଖିଛନ୍ତି : ${score}/${allQuestions.length}`;
+            testContainer.querySelector('.test-section').appendChild(feedback);
+            
+            testContainer.querySelector('.submit-btn').disabled = true;
+        }
+
+        function createMatchingTest() {
+    cleanupAudio();
+    
+    let allPairs = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach(sentence => {
+            sentence.matching.pairs.forEach(p => allPairs.push(p));
+        });
+    } else {
+        allPairs = courseData.sentences[currentSentence].matching.pairs;
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #fa709a;">🔗 ଯୋଡ଼ିଗୁଡ଼ିକୁ ମେଳ କରନ୍ତୁ :</h3>';
+    html += '<p style="margin-bottom: 12px; font-size: 12px;">ମେଳ କରିବା ପାଇଁ ଉଭୟ ସ୍ତମ୍ଭର ଲେଖାଗୁଡ଼ିକୁ କ୍ଲିକ୍ କରନ୍ତୁ । </p>';
+    
+    const shuffledRight = [...allPairs.map(p => p.right)].sort(() => Math.random() - 0.5);
+    
+    html += '<div class="matching-container">';
+    
+    html += '<div>';
+    allPairs.forEach((pair, index) => {
+        const audioButton = createAudioButton(pair.leftAudio, `match-left-${index}`);
+        html += `<div class="match-item" data-left="${index}" data-value="${pair.left}">
+            ${pair.left} ${audioButton}
+        </div>`;
+    });
+    html += '</div>';
+    
+    html += '<div>';
+    shuffledRight.forEach((right, index) => {
+        const originalPair = allPairs.find(p => p.right === right);
+        const audioButton = createAudioButton(originalPair.rightAudio, `match-right-${index}`);
+        html += `<div class="match-item" data-right="${index}" data-value="${right}">
+            ${right} ${audioButton}
+        </div>`;
+    });
+    html += '</div>';
+    
+    html += '</div>';
+    html += '<button class="submit-btn" onclick="submitMatching()">ଉତ୍ତର ଦାଖଲ କରନ୍ତୁ । </button></div>';
+    testContainer.innerHTML = html;
+    
+    let selectedLeft = null;
+    let selectedRight = null;
+    let matches = [];
+    
+    document.querySelectorAll('.match-item[data-left]').forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Don't trigger if clicking audio button
+            if (e.target.classList.contains('audio-control-btn')) return;
+            
+            if (this.classList.contains('correct')) return;
+            document.querySelectorAll('.match-item[data-left]').forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedLeft = this;
+            
+            if (selectedRight) {
+                matches.push({ left: selectedLeft, right: selectedRight });
+                selectedLeft.classList.add('correct');
+                selectedRight.classList.add('correct');
+                selectedLeft.classList.remove('selected');
+                selectedRight.classList.remove('selected');
+                selectedLeft = null;
+                selectedRight = null;
+            }
+        });
+    });
+    
+    document.querySelectorAll('.match-item[data-right]').forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Don't trigger if clicking audio button
+            if (e.target.classList.contains('audio-control-btn')) return;
+            
+            if (this.classList.contains('correct')) return;
+            document.querySelectorAll('.match-item[data-right]').forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedRight = this;
+            
+            if (selectedLeft) {
+                matches.push({ left: selectedLeft, right: selectedRight });
+                selectedLeft.classList.add('correct');
+                selectedRight.classList.add('correct');
+                selectedLeft.classList.remove('selected');
+                selectedRight.classList.remove('selected');
+                selectedLeft = null;
+                selectedRight = null;
+            }
+        });
+    });
+    
+    window.currentMatches = matches;
+}
+           
+        function submitMatching() {
+            let allPairs = [];
+            
+            if (isSummaryScreen) {
+                courseData.sentences.forEach(sentence => {
+                    sentence.matching.pairs.forEach(p => allPairs.push(p));
+                });
+            } else {
+                allPairs = courseData.sentences[currentSentence].matching.pairs;
+            }
+            
+            let score = 0;
+            
+            // First, mark all matched items
+            window.currentMatches.forEach(match => {
+                const leftValue = match.left.dataset.value;
+                const rightValue = match.right.dataset.value;
+                
+                const isCorrect = allPairs.some(pair => pair.left === leftValue && pair.right === rightValue);
+                
+                if (isCorrect) {
+                    score++;
+                } else {
+                    match.left.classList.remove('correct');
+                    match.left.classList.add('wrong');
+                    match.right.classList.remove('correct');
+                    match.right.classList.add('wrong');
+                }
+            });
+            
+            // Now show all correct answers by highlighting unmatched or wrongly matched pairs
+            allPairs.forEach((pair, pairIndex) => {
+                // Find the left item
+                const leftItems = document.querySelectorAll('.match-item[data-left]');
+                const rightItems = document.querySelectorAll('.match-item[data-right]');
+                
+                let leftItem = null;
+                let rightItem = null;
+                
+                leftItems.forEach(item => {
+                    if (item.dataset.value === pair.left) {
+                        leftItem = item;
+                    }
+                });
+                
+                rightItems.forEach(item => {
+                    if (item.dataset.value === pair.right) {
+                        rightItem = item;
+                    }
+                });
+                
+                // If either is wrong or not marked as correct, show the correct pairing
+                if (leftItem && rightItem) {
+                    if (!leftItem.classList.contains('correct') || !rightItem.classList.contains('correct')) {
+                        // Add visual indicator for correct answer
+                        leftItem.style.boxShadow = '0 0 0 3px #4CAF50';
+                        rightItem.style.boxShadow = '0 0 0 3px #4CAF50';
+                    }
+                }
+            });
+            
+            scores.matching += score;
+            completedTests.matching = true;
+            updateScoreDisplay();
+            
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${score === allPairs.length ? 'correct' : 'wrong'}`;
+            feedback.textContent = `ଆପଣ ମାର୍କ୍ ରଖିଛନ୍ତି : ${score}/${allPairs.length}`;
+            
+            // Add correct answers display
+            if (score < allPairs.length) {
+                const correctAnswersDiv = document.createElement('div');
+                correctAnswersDiv.style.cssText = 'margin-top: 10px; text-align: left; font-size: 12px; font-weight: normal;';
+                correctAnswersDiv.innerHTML = '<strong style="color: #2e7d32;">ସଠିକ୍ ଯୋଡିଗୁଡିକ ହେଉଛନ୍ତି :</strong><br>';
+                allPairs.forEach((pair, idx) => {
+                    correctAnswersDiv.innerHTML += `${idx + 1}. ${pair.left} → ${pair.right}<br>`;
+                });
+                feedback.appendChild(correctAnswersDiv);
+            }
+            
+            testContainer.querySelector('.test-section').appendChild(feedback);
+            
+            testContainer.querySelector('.submit-btn').disabled = true;
+            
+            // Disable further clicking
+            document.querySelectorAll('.match-item').forEach(item => {
+                item.style.pointerEvents = 'none';
+            });
+        }
+
+       function createArrangeTest() {
+    cleanupAudio();
+    
+    let allQuestions = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach(sentence => {
+            sentence.arrange.questions.forEach(q => allQuestions.push(q));
+        });
+    } else {
+        allQuestions = courseData.sentences[currentSentence].arrange.questions;
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #30cfd0;">🔤 ଶବ୍ଦଗୁଡ଼ିକୁ କ୍ରମାନ୍ଵୟ ରେ ସଜାନ୍ତୁ :</h3>';
+    
+    allQuestions.forEach((q, qIndex) => {
+        const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+        const audioButton = createAudioButton(q.audio, `arrange-q${qIndex}`);
+        
+        html += `<div class="question" data-q="${qIndex}">
+            <div class="question-header">
+                <div class="question-text">${qIndex + 1}. ସଠିକ୍ କ୍ରମରେ ସଜାନ୍ତୁ:</div>
+                ${audioButton}
+            </div>
+            <div class="arrange-words" data-q="${qIndex}">`;
+        
+        shuffledWords.forEach((word, wIndex) => {
+            html += `<div class="word-chip" data-q="${qIndex}" data-word="${word}">${word}</div>`;
+        });
+        
+        html += `</div>
+            <div class="arranged-answer" data-q="${qIndex}">ଆପଣଙ୍କ ଉତ୍ତର: </div>
+        </div>`;
+    });
+    
+    html += '<button class="submit-btn" onclick="submitArrange()">ଉତ୍ତର ଦାଖଲ କରନ୍ତୁ ।</button></div>';
+    testContainer.innerHTML = html;
+    
+    const selectedWords = {};
+    
+    document.querySelectorAll('.word-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+            const qNum = this.dataset.q;
+            if (!selectedWords[qNum]) selectedWords[qNum] = [];
+            
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+                const index = selectedWords[qNum].indexOf(this.dataset.word);
+                if (index > -1) selectedWords[qNum].splice(index, 1);
+            } else {
+                this.classList.add('selected');
+                selectedWords[qNum].push(this.dataset.word);
+            }
+            
+            document.querySelector(`.arranged-answer[data-q="${qNum}"]`).textContent = 'ଆପଣଙ୍କ ଉତ୍ତର: ' + selectedWords[qNum].join(' ');
+        });
+    });
+    
+    window.selectedArrangeWords = selectedWords;
+}
+
+           
+        function submitArrange() {
+            let allQuestions = [];
+            
+            if (isSummaryScreen) {
+                courseData.sentences.forEach(sentence => {
+                    sentence.arrange.questions.forEach(q => allQuestions.push(q));
+                });
+            } else {
+                allQuestions = courseData.sentences[currentSentence].arrange.questions;
+            }
+            
+            let score = 0;
+            
+            allQuestions.forEach((q, qIndex) => {
+                const userAnswer = (window.selectedArrangeWords[qIndex] || []).join(' ');
+                const correctAnswer = q.correct;
+                
+                const answerSpan = document.querySelector(`.arranged-answer[data-q="${qIndex}"]`);
+                
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                    answerSpan.style.color = '#4CAF50';
+                    score++;
+                } else {
+                    answerSpan.style.color = '#f44336';
+                    const correctMsg = document.createElement('div');
+                    correctMsg.style.cssText = 'margin-top: 6px; color: #2e7d32; font-size: 12px;';
+                    correctMsg.textContent = `ସଠିକ୍ ଉତ୍ତର ହେଉଛି: ${correctAnswer}`;
+                    answerSpan.parentElement.appendChild(correctMsg);
+                }
+            });
+            
+            scores.arrange += score;
+            completedTests.arrange = true;
+            if (!isSummaryScreen) {
+                nextBtn.disabled = false;
+            }
+            updateScoreDisplay();
+            
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${score === allQuestions.length ? 'correct' : 'wrong'}`;
+            feedback.textContent = `ଆପଣଙ୍କ ମାର୍କ୍: ${score}/${allQuestions.length}`;
+            testContainer.querySelector('.test-section').appendChild(feedback);
+            
+            testContainer.querySelector('.submit-btn').disabled = true;
+            
+            document.querySelectorAll('.word-chip').forEach(chip => {
+                chip.style.pointerEvents = 'none';
+            });
+        }
+
+
+function createSTQTest() {
+    cleanupAudio(); // Stop any playing audio
+    
+    let allQuestions = [];
+    
+    if (isSummaryScreen) {
+        courseData.sentences.forEach((sentence, sIndex) => {
+            sentence.stq.questions.forEach(q => {
+                allQuestions.push({...q, sentenceIndex: sIndex});
+            });
+        });
+    } else {
+        allQuestions = courseData.sentences[currentSentence].stq.questions;
+    }
+    
+    let html = '<div class="test-section active"><h3 style="color: #eb3349;">📝 ଅତି ସଂକ୍ଷିପ୍ତ ପ୍ରଶ୍ନୋତ୍ତର :</h3>';
+    
+    allQuestions.forEach((q, qIndex) => {
+        const audioButton = createAudioButton(q.audio, `stq-q${qIndex}`);
+        
+        html += `<div class="question" data-q="${qIndex}">
+            <div class="question-header">
+                <div class="question-text" style="font-size: 15px; margin-bottom: 0;">${qIndex + 1}. ${q.question}</div>
+                ${audioButton}
+            </div>
+            <div style="background: #e8f5e9; padding: 12px; border-radius: 8px; border-left: 4px solid #4CAF50; margin-top: 12px;">
+                <strong style="color: #2e7d32;">ଉତ୍ତର:</strong>
+                <p style="margin-top: 8px; color: #333; line-height: 1.6; text-align: justify;">${q.answer}</p>
+            </div>
+        </div>`;
+    });
+    
+    html += '</div>';
+    testContainer.innerHTML = html;
+}
+        mcqBtn.addEventListener('click', createMCQTest);
+        tfBtn.addEventListener('click', createTFTest);
+        fibBtn.addEventListener('click', createFIBTest);
+        matchBtn.addEventListener('click', createMatchingTest);
+        arrangeBtn.addEventListener('click', createArrangeTest);
+        stqBtn.addEventListener('click', createSTQTest);
+
+        prevBtn.addEventListener('click', () => {
+            if (isSummaryScreen) {
+                currentSentence = courseData.sentences.length - 1;
+                loadSentence(currentSentence);
+            } else if (currentSentence > 0) {
+                currentSentence--;
+                loadSentence(currentSentence);
+            } else {
+                // If at first sentence, go to summary
+                loadSummary();
+            }
+        });
+
+       nextBtn.addEventListener('click', () => {
+    if (currentSentence < courseData.sentences.length - 1) {
+        currentSentence++;
+        loadSentence(currentSentence);
+    } else {
+        // Show summary screen after the last sentence
+        loadSummary();
+    }
+});
+        // Don't auto-start - wait for authentication
+// loadSentence will be called after successful login
+prevBtn.disabled = true;
+
+// Initialize after login
+function initializeApp() {
+    loadSentence(0);
+}
+
+// Call after successful authentication
+
+// What's in the Class Toggle Functionality
+document.getElementById('toggleClassInfo').addEventListener('click', function() {
+    const options = document.getElementById('classInfoOptions');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const classContent = document.getElementById('classContent');
+    
+    if (options.style.display === 'none') {
+        options.style.display = 'grid';
+        this.textContent = '❌ Hide Class Info';
+    } else {
+        options.style.display = 'none';
+        audioPlayer.style.display = 'none';
+        classContent.style.display = 'none';
+        this.textContent = '📚 What\'s in the Class?';
+        
+        // Stop audio if playing
+        const audio = document.getElementById('classAudio');
+        audio.pause();
+        audio.currentTime = 0;
+    }
+});
+
+document.getElementById('listenBtn').addEventListener('click', function() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const classContent = document.getElementById('classContent');
+    
+    // Hide content box, show audio player
+    classContent.style.display = 'none';
+    
+    if (audioPlayer.style.display === 'none') {
+        audioPlayer.style.display = 'block';
+        const audio = document.getElementById('classAudio');
+        audio.play();
+    } else {
+        audioPlayer.style.display = 'none';
+        const audio = document.getElementById('classAudio');
+        audio.pause();
+        audio.currentTime = 0;
+    }
+});
+
+document.getElementById('seeBtn').addEventListener('click', function() {
+    const classContent = document.getElementById('classContent');
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    // Hide audio player, show content box
+    audioPlayer.style.display = 'none';
+    const audio = document.getElementById('classAudio');
+    audio.pause();
+    audio.currentTime = 0;
+    
+    if (classContent.style.display === 'none') {
+        classContent.style.display = 'block';
+    } else {
+        classContent.style.display = 'none';
+    }
+});
+
+document.getElementById('stopAudioBtn').addEventListener('click', function() {
+    const audio = document.getElementById('classAudio');
+    audio.pause();
+    audio.currentTime = 0;
+});
+// AI Assistant Toggle Functionality
+let assistantLoaded = false;
+
+document.getElementById('toggleAssistantBtn').addEventListener('click', function() {
+    const container = document.getElementById('assistantContainer');
+    const iframe = document.getElementById('assistantIframe');
+    const loading = document.getElementById('assistantLoading');
+    
+    if (container.classList.contains('active')) {
+        // Close assistant
+        closeAssistant();
+    } else {
+        // Open assistant
+        container.classList.add('active');
+        this.textContent = '✖️ ଆସିଷ୍ଟାଣ୍ଟ ବନ୍ଦ କରିବା';
+        this.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)';
+        
+        // Load iframe only once
+        if (!assistantLoaded) {
+            setTimeout(() => {
+                iframe.src = 'https://student.schoolai.com/dot/spaces/join?code=AWSM-E74Y';
+                iframe.style.display = 'block';
+                loading.style.display = 'none';
+                assistantLoaded = true;
+            }, 500);
+        } else {
+            iframe.style.display = 'block';
+            loading.style.display = 'none';
+        }
+        
+        // Scroll to assistant (smooth on mobile)
+        setTimeout(() => {
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+    }
+});
+
+function closeAssistant() {
+    const container = document.getElementById('assistantContainer');
+    const btn = document.getElementById('toggleAssistantBtn');
+    const iframe = document.getElementById('assistantIframe');
+    
+    container.classList.remove('active');
+    btn.textContent = '🙋 ଆସନ୍ତୁ, ଏଠାରେ ଆସିଷ୍ଟାଣ୍ଟ କୁ ପାଠ ପଚାରିବା...';
+    btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    
+    // Optional: hide iframe to save resources
+    // iframe.style.display = 'none';
+}
+    </script>
+</body>
+</html>
