@@ -2488,22 +2488,21 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOcfbuQ_kGOk
 const CLASS_NAME = "llb";
 
 // ============================================
-// UNIFIED DEVICE ID GENERATION
-// This MUST match the registration page exactly
+// CLASS-SPECIFIC DEVICE ID GENERATION
+// Students can register for multiple classes from the same device
 // ============================================
 function getDeviceId() {
-    let deviceId = localStorage.getItem('deviceId');
+    const storageKey = CLASS_NAME + '_deviceId';  // e.g., 'llb_deviceId'
+    let deviceId = localStorage.getItem(storageKey);
     if (!deviceId) {
-        // Generate a truly unique ID just once and store it forever
         deviceId = 'DEV_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('deviceId', deviceId);
-        console.log('✓ New device ID created:', deviceId);
+        localStorage.setItem(storageKey, deviceId);
+        console.log('✓ New device ID created for ' + CLASS_NAME + ':', deviceId);
     } else {
-        console.log('✓ Existing device ID loaded:', deviceId);
+        console.log('✓ Existing device ID loaded for ' + CLASS_NAME + ':', deviceId);
     }
     return deviceId;
 }
-
 // ============================================
 // SESSION TRACKING
 // ============================================
