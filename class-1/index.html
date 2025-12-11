@@ -2485,35 +2485,15 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOcfbuQ_kGOk
 // CRITICAL: This must match CLASS_SHEET_NAME in your registration script
 const CLASS_NAME = "llb";  
 
-// Generate unique device ID based on browser fingerprint
 function getDeviceId() {
     let deviceId = localStorage.getItem('deviceId');
     if (!deviceId) {
-        const nav = navigator;
-        const screen = window.screen;
-        const fingerprint = [
-            nav.userAgent,
-            nav.language,
-            screen.colorDepth,
-            screen.width + 'x' + screen.height,
-            new Date().getTimezoneOffset(),
-            !!window.sessionStorage,
-            !!window.localStorage
-        ].join('|');
-        
-        let hash = 0;
-        for (let i = 0; i < fingerprint.length; i++) {
-            const char = fingerprint.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        
-        deviceId = 'DEV_' + Math.abs(hash).toString(36);
+        // Generate a truly unique ID just once and store it forever
+        deviceId = 'DEV_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('deviceId', deviceId);
     }
     return deviceId;
 }
-
 // Session tracking
 let sessionData = {
     rollNumber: null,
