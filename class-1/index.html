@@ -2116,7 +2116,7 @@ body > div:first-child {
         <div id="loginError" class="login-error"></div>
 
             <!-- Know Your Roll Number Button -->
-        <button onclick="window.open('https://llb-registration.pages.dev/bsa/', '_blank')" class="roll-number-btn" style="background-color: #FF6B6B; margin-top: 10px; padding: 12px; font-size: 14px; border: none; border-radius: 8px; color: white; cursor: pointer; width: 100%; font-weight: bold;">
+        <button onclick="window.open('https://llb-registration.pages.dev/bns/', '_blank')" class="roll-number-btn" style="background-color: #FF6B6B; margin-top: 10px; padding: 12px; font-size: 14px; border: none; border-radius: 8px; color: white; cursor: pointer; width: 100%; font-weight: bold;">
             📋 ଆପଣଙ୍କ ରୋଲ୍ ନମ୍ବର ଜାଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ । 
         </button>  
         
@@ -2471,9 +2471,8 @@ body > div:first-child {
 
 
 <script>
-// ============================================
-// PAGE LOADING ANIMATION
-// ============================================
+
+// Add this at the VERY START of your script section
 document.body.classList.add('loading');
 window.addEventListener('load', () => {
     setTimeout(() => {
@@ -2481,48 +2480,52 @@ window.addEventListener('load', () => {
     }, 100);
 });
 
-// ============================================
-// CONFIGURATION - UPDATE THESE VALUES
-// ============================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1JrUQ9i0Bbcmd5uP_sY87NXDfqBdppj-n7rBKsU3S07pRQ-Uzlozq0Kw5ej8bpzFLfw/exec';
-const CLASS_NAME = "llb";
+// Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9j8IEP1Np1oxhrcIgfA-Bxk_lSsCrlgs2RbXB6A98FaOWSuaJLsYTH3U2EHKb8zqe8Q/exec';
 
-// ============================================
-// CLASS-SPECIFIC DEVICE ID GENERATION
-// Students can register for multiple classes from the same device
-// ============================================
+// CRITICAL: This must match CLASS_SHEET_NAME in your registration script
+const CLASS_NAME = "bns";  
+
+// Generate unique device ID based on browser fingerprint
 function getDeviceId() {
-    const storageKey = CLASS_NAME + '_deviceId';  // e.g., 'llb_deviceId'
-    let deviceId = localStorage.getItem(storageKey);
+    let deviceId = localStorage.getItem('deviceId');
     if (!deviceId) {
-        deviceId = 'DEV_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem(storageKey, deviceId);
-        console.log('✓ New device ID created for ' + CLASS_NAME + ':', deviceId);
-    } else {
-        console.log('✓ Existing device ID loaded for ' + CLASS_NAME + ':', deviceId);
+        const nav = navigator;
+        const screen = window.screen;
+        const fingerprint = [
+            nav.userAgent,
+            nav.language,
+            screen.colorDepth,
+            screen.width + 'x' + screen.height,
+            new Date().getTimezoneOffset(),
+            !!window.sessionStorage,
+            !!window.localStorage
+        ].join('|');
+        
+        let hash = 0;
+        for (let i = 0; i < fingerprint.length; i++) {
+            const char = fingerprint.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        
+        deviceId = 'DEV_' + Math.abs(hash).toString(36);
+        localStorage.setItem('deviceId', deviceId);
     }
     return deviceId;
 }
-// ============================================
-// SESSION TRACKING
-// ============================================
+
+// Session tracking
 let sessionData = {
     rollNumber: null,
     deviceId: getDeviceId(),
-    className: CLASS_NAME,
+    className: CLASS_NAME,  // ADD THIS
     loginTime: null,
     logoutTime: null,
     lastActivity: null
 };
 
-console.log('=== LOGIN PAGE INITIALIZED ===');
-console.log('Device ID:', sessionData.deviceId);
-console.log('Class:', CLASS_NAME);
-console.log('=============================');
-
-// ============================================
-// LOGIN HANDLER
-// ============================================
+// Login handler
 document.getElementById('loginBtn').addEventListener('click', async function() {
     const rollNumber = document.getElementById('rollNumberInput').value.trim();
     const consent = document.getElementById('consentCheck').checked;
@@ -2541,24 +2544,13 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     }
     
     this.disabled = true;
-    this.innerHTML = '⏳ ଦୟାକରି ଅପେକ୍ଷା କରନ୍ତୁ... ଆପଣଙ୍କର ପରିଚୟପତ୍ର ଯାଞ୍ଚ କରାଯାଉଛି । ଏଥିରେ କିଛି ସମୟ ଲାଗିପାରେ (ପ୍ରାୟ 10 ସେକେଣ୍ଡ)... (10s)';
+    this.innerHTML = '⏳ ଦୟାକରି ଅପେକ୍ଷା କରନ୍ତୁ... ଆପଣଙ୍କର ପରିଚୟପତ୍ର ଯାଞ୍ଚ କରାଯାଉଛି । ଏଥିରେ କିଛି ସମୟ ଲାଗିପାରେ (ପ୍ରାୟ 10 ସେକେଣ୍ଡ)...';
     
     try {
-        console.log('=== LOGIN ATTEMPT ===');
-        console.log('Roll Number:', rollNumber);
-        console.log('Device ID:', sessionData.deviceId);
-        console.log('Class:', CLASS_NAME);
-        console.log('===================');
-        
-        // SINGLE optimized verification call
+        // SINGLE optimized call
         const result = await fetch(
             `${GOOGLE_SCRIPT_URL}?action=verify&rollNumber=${rollNumber}&deviceId=${sessionData.deviceId}&className=${CLASS_NAME}`
         ).then(r => r.json());
-        
-        console.log('=== LOGIN RESPONSE ===');
-        console.log('Success:', result.success);
-        console.log('Message:', result.message);
-        console.log('====================');
         
         if (result.success) {
             // Show interface IMMEDIATELY
@@ -2585,12 +2577,7 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
                     className: CLASS_NAME,
                     timestamp: new Date().toISOString()
                 })
-            }).then(() => {
-                console.log('✓ Login tracking sent');
-            }).catch(err => {
-                console.log('✗ Login tracking failed:', err);
             });
-            
         } else {
             errorDiv.textContent = result.message || 'Login failed';
         }
@@ -2603,9 +2590,7 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     this.textContent = 'Enter';
 });
 
-// ============================================
-// ACTIVITY TRACKING
-// ============================================
+// Activity tracking
 function startActivityTracking() {
     ['click', 'keypress', 'scroll', 'touchstart'].forEach(event => {
         document.addEventListener(event, () => {
@@ -2613,64 +2598,59 @@ function startActivityTracking() {
         });
     });
     
-    // Send heartbeat every 2 minutes
     setInterval(sendHeartbeat, 120000);
-    
-    // Handle logout on page close
     window.addEventListener('beforeunload', handleLogout);
 }
 
 async function sendHeartbeat() {
-    if (!sessionData.rollNumber) return;
-    
     try {
-        console.log('→ Sending heartbeat...');
         await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 action: 'heartbeat',
                 rollNumber: sessionData.rollNumber,
                 deviceId: sessionData.deviceId,
-                className: CLASS_NAME,
+                className: CLASS_NAME,  // ADD THIS
                 timestamp: new Date().toISOString()
             })
         });
-        console.log('✓ Heartbeat sent');
     } catch (error) {
-        console.error('✗ Heartbeat error:', error);
+        console.error('Heartbeat error:', error);
     }
 }
 
 async function handleLogout() {
-    if (!sessionData.rollNumber || !sessionData.loginTime) return;
-    
     sessionData.logoutTime = new Date();
     const duration = Math.floor((sessionData.logoutTime - sessionData.loginTime) / 1000);
     
     try {
-        console.log('→ Logging out... Duration:', duration, 'seconds');
         await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             keepalive: true,
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 action: 'logout',
                 rollNumber: sessionData.rollNumber,
                 deviceId: sessionData.deviceId,
-                className: CLASS_NAME,
+                className: CLASS_NAME,  // ADD THIS
                 timestamp: new Date().toISOString(),
                 duration: duration
             })
         });
-        console.log('✓ Logout complete');
     } catch (error) {
-        console.error('✗ Logout error:', error);
+        console.error('Logout error:', error);
     }
 }
 
+
+    
 // ============================================
 // IMPORTANT: Add your loadSentence() and other
 // app-specific functions below this line
