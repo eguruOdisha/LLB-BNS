@@ -622,71 +622,134 @@
     </div>
 
     <script>
-        const classNames = {
-            1: 'Odisha e-Guru',
-            2: 'Odisha e-Guru',
-            3: 'Odisha e-Guru',
-            4: 'Odisha e-Guru',
-            5: 'Odisha e-Guru',
-            6: 'Odisha e-Guru',
-            7: 'Odisha e-Guru',
-            8: 'Odisha e-Guru',
-            9: 'Odisha e-Guru',
-            10: 'Odisha e-Guru',
-            11: 'Odisha e-Guru',
-            12: 'Odisha e-Guru',
-            13: 'Odisha e-Guru',
-            14: 'Odisha e-Guru',
-            15: 'Odisha e-Guru',
-            16: 'Odisha e-Guru',
-            17: 'Odisha e-Guru',
-            18: 'Odisha e-Guru',
-            19: 'Odisha e-Guru',
-            20: 'Odisha e-Guru',
-            21: 'Odisha e-Guru',
-            22: 'Odisha e-Guru',
-            23: 'Odisha e-Guru',
-            24: 'Odisha e-Guru',
-            25: 'Odisha e-Guru',
-            26: 'Odisha e-Guru',
-            27: 'Odisha e-Guru',
-            28: 'Odisha e-Guru',
-            29: 'Odisha e-Guru',
-            30: 'Odisha e-Guru'
-        };
+const classNames = {
+    // ==================== CHAPTER I: PRELIMINARY ====================
+    // PART A: FOUNDATION (2 Classes)
+    1: 'Preliminary - Introduction to BNS',
+    2: 'Types of Punishments',
+    
+    // ==================== CHAPTER II: PUNISHMENTS ====================
+    // PART B: PUNISHMENT PROCEDURES (1 Class)
+    3: 'Punishment Procedures and Computation',
+    
+    // ==================== CHAPTER III: GENERAL EXCEPTIONS ====================
+    // PART C: DEFENSES AND EXCEPTIONS (2 Classes)
+    4: 'General Exceptions Part 1 - Mistake, Insanity, Intoxication',
+    5: 'General Exceptions Part 2 - Private Defense Rights',
+    
+    // ==================== CHAPTER IV: ABETMENT & CONSPIRACY ====================
+    // PART D: PARTICIPATION IN CRIME (1 Class)
+    6: 'Abetment, Criminal Conspiracy and Attempt',
+    
+    // ==================== CHAPTER V: OFFENCES AGAINST WOMEN AND CHILD ====================
+    // PART E: CRIMES AGAINST WOMEN (2 Classes)
+    7: 'Offences Against Women Part 1 - Rape and Sexual Offences',
+    8: 'Offences Against Women Part 2 - Dowry, Cruelty, Stalking',
+    
+    // PART F: CRIMES AGAINST CHILDREN (1 Class)
+    9: 'Offences Against Children - Protection Laws',
+    
+    // ==================== CHAPTER VI: OFFENCES AFFECTING THE HUMAN BODY ====================
+    // PART G: HOMICIDE (1 Class)
+    10: 'Offences Causing Death - Murder and Culpable Homicide',
+    
+    // PART H: BODILY HARM (1 Class)
+    11: 'Hurt and Grievous Hurt - Including Acid Attacks',
+    
+    // PART I: CONFINEMENT (1 Class)
+    12: 'Wrongful Restraint, Confinement and Kidnapping',
+    
+    // PART J: PHYSICAL ASSAULT (1 Class)
+    13: 'Assault and Criminal Force',
+    
+    // PART K: SLAVERY (1 Class)
+    14: 'Slavery and Forced Labor',
+    
+    // PART L: REPUTATION (1 Class)
+    15: 'Defamation and Criminal Intimidation',
+    
+    // ==================== CHAPTER VII: OFFENCES AGAINST THE STATE ====================
+    // PART M: NATIONAL SECURITY (1 Class)
+    16: 'Offences Against State - Sedition and Waging War',
+    
+    // ==================== CHAPTER VIII: ARMY, NAVY AND AIR FORCE ====================
+    // PART N: MILITARY OFFENCES (1 Class)
+    17: 'Offences Relating to Armed Forces',
+    
+    // ==================== CHAPTER IX: OFFENCES RELATING TO ELECTIONS ====================
+    // PART O: ELECTORAL CRIMES (1 Class)
+    18: 'Election Offences - Bribery and Booth Capturing',
+    
+    // ==================== CHAPTER X: COIN AND GOVERNMENT STAMPS ====================
+    // PART P: COUNTERFEITING (1 Class)
+    19: 'Offences Relating to Coin and Government Stamps',
+    
+    // ==================== CHAPTER XI: OFFENCES AGAINST PUBLIC TRANQUILITY ====================
+    // PART Q: PUBLIC ORDER (1 Class)
+    20: 'Public Tranquility - Unlawful Assembly and Rioting',
+    
+    // ==================== CHAPTER XII: PUBLIC SERVANTS ====================
+    // PART R: CORRUPTION (1 Class)
+    21: 'Offences by or Relating to Public Servants',
+    
+    // ==================== CHAPTER XIV: CONTEMPT OF COURT ====================
+    // PART S: JUSTICE SYSTEM (1 Class)
+    22: 'Offences Relating to Courts of Justice',
+    
+    // ==================== CHAPTER XVII: OFFENCES AGAINST PROPERTY ====================
+    // PART T: PROPERTY CRIMES (2 Classes)
+    23: 'Property Offences Part 1 - Theft, Extortion, Robbery',
+    24: 'Property Offences Part 2 - Cheating, Breach of Trust',
+    
+    // ==================== CHAPTERS XVIII-XX: DOCUMENTS & FINAL ====================
+    // PART U: DOCUMENTS AND CONCLUSION (1 Class)
+    25: 'Document Offences and Final Provisions'
+};
 
-        const classSchedule = {
-            1: { available: false, releaseDate: '2025-11-01 10:00' },
-            2: { available: false, releaseDate: '2025-12-08 10:00' },
-            3: { available: false, releaseDate: '2025-12-09 10:00' },
-            4: { available: false, releaseDate: '2025-12-10 10:00' },
-            5: { available: false, releaseDate: '2025-12-11 10:00' },
-            6: { available: false, releaseDate: '2025-12-12 10:00' },
-            7: { available: false, releaseDate: '2025-12-13 10:00' },
-            8: { available: false, releaseDate: '2025-12-14 10:00' },
-            9: { available: false, releaseDate: '2025-12-15 10:00' },
-            10: { available: false, releaseDate: '2025-12-16 10:00' },
-            11: { available: false, releaseDate: '2025-12-17 10:00' },
-            12: { available: false, releaseDate: '2025-12-18 10:00' },
-            13: { available: false, releaseDate: '2025-12-19 10:00' },
-            14: { available: false, releaseDate: '2025-12-20 10:00' },
-            15: { available: false, releaseDate: '2025-12-21 10:00' },
-            16: { available: false, releaseDate: '2025-12-22 10:00' },
-            17: { available: false, releaseDate: '2025-12-23 10:00' },
-            18: { available: false, releaseDate: '2025-12-24 10:00' },
-            19: { available: false, releaseDate: '2025-12-25 10:00' },
-            20: { available: false, releaseDate: '2025-12-26 10:00' },
-            21: { available: false, releaseDate: '2025-12-27 10:00' },
-            22: { available: false, releaseDate: '2025-12-28 10:00' },
-            23: { available: false, releaseDate: '2025-12-29 10:00' },
-            24: { available: false, releaseDate: '2025-12-30 10:00' },
-            25: { available: false, releaseDate: '2025-12-31 10:00' },
-            26: { available: false, releaseDate: '2026-01-01 10:00' },
-            27: { available: false, releaseDate: '2026-01-01 10:00' },
-            28: { available: false, releaseDate: '2026-01-01 10:00' },
-            29: { available: false, releaseDate: '2026-01-01 10:00' },
-            30: { available: false, releaseDate: '2026-01-01 10:00' }
-        };
+const classSchedule = {
+    // ==================== WEEK 1: FOUNDATION (Dec 13-16, 2025) ====================
+    1: { available: false, releaseDate: '2025-12-13 10:00' },
+    2: { available: false, releaseDate: '2025-12-14 10:00' },
+    3: { available: false, releaseDate: '2025-12-15 10:00' },
+    
+    // ==================== WEEK 2: EXCEPTIONS & DEFENSES (Dec 17-20, 2025) ====================
+    4: { available: false, releaseDate: '2025-12-17 10:00' },
+    5: { available: false, releaseDate: '2025-12-18 10:00' },
+    6: { available: false, releaseDate: '2025-12-20 10:00' },
+    
+    // ==================== WEEK 3: CRIMES AGAINST WOMEN (Dec 23-27, 2025) ====================
+    7: { available: false, releaseDate: '2025-12-23 10:00' },
+    8: { available: false, releaseDate: '2025-12-25 10:00' },
+    9: { available: false, releaseDate: '2025-12-27 10:00' },
+    
+    // ==================== WEEK 4: HOMICIDE & BODILY HARM (Dec 30 - Jan 3, 2026) ====================
+    10: { available: false, releaseDate: '2025-12-30 10:00' },
+    11: { available: false, releaseDate: '2026-01-01 10:00' },
+    12: { available: false, releaseDate: '2026-01-03 10:00' },
+    
+    // ==================== WEEK 5: ASSAULT & LIBERTY (Jan 6-10, 2026) ====================
+    13: { available: false, releaseDate: '2026-01-06 10:00' },
+    14: { available: false, releaseDate: '2026-01-08 10:00' },
+    15: { available: false, releaseDate: '2026-01-10 10:00' },
+    
+    // ==================== WEEK 6: STATE & MILITARY (Jan 13-17, 2026) ====================
+    16: { available: false, releaseDate: '2026-01-13 10:00' },
+    17: { available: false, releaseDate: '2026-01-15 10:00' },
+    18: { available: false, releaseDate: '2026-01-17 10:00' },
+    
+    // ==================== WEEK 7: COUNTERFEITING & PUBLIC ORDER (Jan 20-24, 2026) ====================
+    19: { available: false, releaseDate: '2026-01-20 10:00' },
+    20: { available: false, releaseDate: '2026-01-22 10:00' },
+    21: { available: false, releaseDate: '2026-01-24 10:00' },
+    
+    // ==================== WEEK 8-9: PROPERTY CRIMES (Jan 27 - Feb 7, 2026) ====================
+    22: { available: false, releaseDate: '2026-01-27 10:00' },
+    23: { available: false, releaseDate: '2026-01-31 10:00' },
+    24: { available: false, releaseDate: '2026-02-04 10:00' },
+    
+    // ==================== WEEK 10: FINAL MODULE (Feb 10, 2026) ====================
+    25: { available: false, releaseDate: '2026-02-10 10:00' }
+};
 
         let selectedClass = null;
 
